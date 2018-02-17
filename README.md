@@ -1,2 +1,2 @@
 # Mass-slide
-an automatic, text file basd pptx slide maker
+an automatic, text file based pptx slide maker
