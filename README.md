@@ -13,7 +13,7 @@ Usage
 
 This app requires [python 2.7](https://www.python.org/download/releases/2.7/) and [python-pptx](http://python-pptx.readthedocs.io).
 
-If you already have python, you can install python-pptx easilly:
+If you already have python, you can install python-pptx easily:
 
 ```sh
 pip install python-pptx
