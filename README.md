@@ -15,15 +15,15 @@ This app requires [python 2.7](https://www.python.org/download/releases/2.7/) an
 
 If you already have python, you can install python-pptx easilly:
 
-'''sh
+```sh
 pip install python-pptx
-'''
+```
 
 You can use the following commands to start:
 
-'''sh
+```sh
 python app.py
-'''
+```
 
 
 Notes
@@ -50,15 +50,15 @@ Mass-slide는 [python-pptx](http://python-pptx.readthedocs.io)의 응용입니�
 
 이미 파이썬이 설치되어 있다면, python-pptx를 다음 명령어로 설치할 수 있습니다:
 
-'''sh
+```sh
 pip install python-pptx
-''' 
+``` 
 
 다음 명령어로 앱을 실행할 수 있습니다.
 
-'''sh
+```sh
 python app.py
-'''
+```
 
 
 메모
