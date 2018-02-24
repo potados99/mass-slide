@@ -1,8 +1,10 @@
 #-*- coding: utf-8 -*-
 import sys 
 sys.path.insert(0, 'src/') 
+
 import re 
 import templateModule
+
 
 List = templateModule.makeChapterList(templateModule.readTemplate())
 
@@ -30,3 +32,7 @@ for i in List:
 				linebreakCount = 0
 			print (j)
 
+
+if __name__ == "__main__":
+        if (len(sys.argv) > 1): # if arguments (except filename) exists, call function named sys.argv.[1]
+                function = getattr(sys.modules[__name__], sys.argv[1])
