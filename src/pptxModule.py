@@ -39,6 +39,12 @@ def makeSlide(slideName, slideLayout, text, bold):
     run.font.name = u"1훈하얀고양이 R"
 
 
+def addNewPage():
+	return nul
+
+def addNewLine():
+	return nul
+
 print('Getting list of lines from textModule')
 lineList = textModule.makeLineList(textModule.readTextFile())
 
