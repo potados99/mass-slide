@@ -19,6 +19,9 @@ for chapter in List:
 
 		# Bold string
 		elif (m):
+			if (linebreakCount >= 1):
+				print ("	new page")
+				linebreakCount = 0
 			print("[" + m.group().replace("*", "") + "]")
 
 		# Title
