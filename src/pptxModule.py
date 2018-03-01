@@ -38,9 +38,14 @@ def makeSlide(slideName, slideLayout, text, bold):
     run.font.bold = bold
     run.font.name = u"1훈하얀고양이 R"
 
+def createNewPresentation():
+	prs = Presentation()
+	return prs
 
-def addNewPage():
-	return nul
+def addNewSlide(prs, slideLayout):
+	newSlide = prs.slides.add_slide(prs.slide_layouts[slideLayout]) 
+
+	return newSlide
 
 def addNewLine():
 	return nul
