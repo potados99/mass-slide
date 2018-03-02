@@ -8,19 +8,39 @@ from pptx import Presentation
 from pptx.util import Inches, Pt
 from pptx.enum.text import PP_ALIGN
 from pptx.enum.text import MSO_ANCHOR, MSO_AUTO_SIZE
+from pptx.enum.shapes import MSO_SHAPE
+from pptx.dml.color import RGBColor
+
 import templateModule
 import fontModule
+
+ref = Presentation('reference/sample.pptx')
+#xml_slides = ref.slides._sldIdLst
+#slides = list(xml_slides)
+#whiteSlide = ref.slides[0]
 
 def newPresentation():
 	global prs
 	prs = Presentation()
 
 def newSlide(slideLayout):
-	newSlide = prs.slides.add_slide(prs.slide_layouts[slideLayout])
-	
-	left = top = Inches(0.1)
-	width = Inches(9.8)
-	height = Inches(7.3)
+	newSlide = prs.slides.add_slide(prs.slide_layouts[6]) 
+#	prs.slides.append(whiteSlide)
+
+	left = top = Inches(0)
+	width = Inches(10)
+	height = Inches(7.5)
+
+	backgroundShape = newSlide.shapes.add_shape(
+		MSO_SHAPE.RECTANGLE, left, top, width, height
+	)
+
+	line = backgroundShape.line
+	line.color.rgb = RGBColor(255, 252, 197)
+
+	fill = backgroundShape.fill
+	fill.solid()
+	fill.fore_color.rgb = RGBColor(255, 252, 197)	
 
 	textBox = newSlide.shapes.add_textbox(left, top, width, height)
 
@@ -31,7 +51,22 @@ def newSlide(slideLayout):
 	text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
 
 def blankSlide():
-	return 0
+	newSlide = prs.slides.add_slide(prs.slide_layouts[6]) # blank
+
+	left = top = Inches(0)
+	width = Inches(10)
+	height = Inches(7.5)
+
+	backgroundShape = newSlide.shapes.add_shape(
+		MSO_SHAPE.RECTANGLE, left, top, width, height
+	)
+
+	line = backgroundShape.line
+	line.color.rgb = RGBColor(0, 0, 0)
+
+	fill = backgroundShape.fill
+	fill.solid()
+	fill.fore_color.rgb = RGBColor(0, 0, 0)	
 
 def newLine(text, size, bold):
 	p = text_frame.add_paragraph()
@@ -58,6 +93,7 @@ for chapter in List:
 
 	for line in chapter:
 		boldMatch = re.match('\*\*.+\*\*', line)
+		tinyMatch = re.match('-.+-', line)
 
 		# Linebreak
 		if (line == ""):
@@ -73,7 +109,11 @@ for chapter in List:
 		# Empty
 		elif (line == "//"):
 			# create a blank page with black background
-			blankSlide()
+			if (linebreakCount >= 1):
+				print ("//new page//")
+				linebreakCount = 0
+	
+				blankSlide()
 
 		# Title
 		elif (chapter.index(line) == 0): # first line
@@ -95,18 +135,23 @@ for chapter in List:
 
 			# Bold
 			if (boldMatch):
-				print("[" + boldMatch.group().replace("*", "") + "]")
-#				SIZE = fontSize('medium')
+				print ("[" + boldMatch.group().replace("*", "") + "]")
 
 				if (chapter.index(line) == 1): # first bold line
 					SIZE = fontModule.fontSize('big')
 
 				newLine(text=boldMatch.group().replace("*", ""), size=SIZE, bold=True)
 
+			# Small
+			elif (tinyMatch):
+				print ("(" + tinyMatch.group().replace("-", "") + ")")
+				SIZE = fontModule.fontSize('tiny')
+
+				newLine(text=tinyMatch.group().replace("*", ""), size=SIZE, bold=False)
+
 			# Plane
 			else:
 				print (line)
-#				SIZE = fontSize('medium')
 
 				newLine(text=line, size=SIZE, bold=BOLD)
 
