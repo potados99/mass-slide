@@ -1,13 +1,17 @@
 #-*- coding: utf-8 -*-
 
 SMALL_FONT_LIST = [
+
 	'성호경',
 	'신앙고백'
+
 ]
 
 MEDIUM_FONT_LIST = [
+
 	'입당송'
 	'입당성가'
+
 ]
 
 BIG_FONT_LIST = [

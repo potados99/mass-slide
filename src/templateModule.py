@@ -1,4 +1,5 @@
 #-*- coding: utf-8 -*-
+
 import re
 
 TEMPLATE_PATH='/home/pi/Projects/massSlide/templates'
@@ -6,7 +7,6 @@ TEMPLATE_PATH='/home/pi/Projects/massSlide/templates'
 def readTemplate(template):
 	print('opening template.txt')
 	f = open(TEMPLATE_PATH + '/' + template + '.txt', 'r')
-#	rawText = unicode(f.read(), 'utf-8')
 	rawText = f.read()
 	f.close
 	return rawText
