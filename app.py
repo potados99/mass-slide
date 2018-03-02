@@ -1,4 +1,5 @@
 #-*- coding: utf-8 -*-
+
 import re 
 import sys 
 sys.path.insert(0, 'src/') 
@@ -8,6 +9,7 @@ from pptx.util import Inches, Pt
 from pptx.enum.text import PP_ALIGN
 from pptx.enum.text import MSO_ANCHOR, MSO_AUTO_SIZE
 import templateModule
+import fontModule
 
 List = templateModule.makeChapterList(templateModule.readTemplate(sys.argv[1]))
 
@@ -57,32 +59,50 @@ newPresentation()
 
 for chapter in List:
 	linebreakCount = 0
-
+	SIZE = 0
+	BOLD = False
 	for line in chapter:
-		m = re.match('\*\*.+\*\*', line)
+		boldMatch = re.match('\*\*.+\*\*', line)
 
 		# Linebreak
 		if (line == ""):
 			linebreakCount += 1
 
+		# Bold mark
+		elif (line == "***"):
+			if (BOLD):
+				BOLD = False
+			else:
+				BOLD = True
+
 		# Title
 		elif (chapter.index(line) == 0): # first line
+#			if (List.index(chapter) != 0):
 			print ("\n//new chapter//\n")
 			newSlide(6)
 			print ("<" + line + ">")
 
 		# Text
 		else:
+			SIZE = fontModule.setFontSize(chapter[0])
+			
 			if (linebreakCount >= 1):
 				print ("//new page//") #########################
 				newSlide(6)
 				linebreakCount = 0
-			if (m): # Bold
-				print("[" + m.group().replace("*", "") + "]")
-				newLine(text=m.group().replace("*", ""), size=90, bold=True)
-			else: # Plane
+
+			# Bold
+			if (boldMatch):
+				print("[" + boldMatch.group().replace("*", "") + "]")
+#				SIZE = fontSize('medium')
+				if (chapter.index(line) == 1): # first bold line
+					SIZE = fontModule.fontSize('big')
+				newLine(text=boldMatch.group().replace("*", ""), size=SIZE, bold=True)
+			# Plane
+			else:
 				print (line)
-				newLine(text=line, size=80, bold=False)
+#				SIZE = fontSize('medium')
+				newLine(text=line, size=SIZE, bold=BOLD)
 
 
 savePresentation()
