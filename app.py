@@ -93,7 +93,7 @@ for chapter in List:
 
 	for line in chapter:
 		boldMatch = re.match('\*\*.+\*\*', line)
-		tinyMatch = re.match('-.+-', line)
+		tinyMatch = re.match('\'.+\'', line)
 
 		# Linebreak
 		if (line == ""):
@@ -144,10 +144,10 @@ for chapter in List:
 
 			# Small
 			elif (tinyMatch):
-				print ("(" + tinyMatch.group().replace("-", "") + ")")
+				print ("(" + tinyMatch.group().replace("\'", "") + ")")
 				SIZE = fontModule.fontSize('tiny')
 
-				newLine(text=tinyMatch.group().replace("*", ""), size=SIZE, bold=False)
+				newLine(text=tinyMatch.group().replace("\'", ""), size=SIZE, bold=False)
 
 			# Plane
 			else:

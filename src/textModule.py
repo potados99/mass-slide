@@ -46,3 +46,6 @@ def writeToTextFile(lineList):
     print('Writing lines')
     f = open('../text/readyToUse.txt', 'w+')
     f.write('\n'.join(lineList).encode('utf-8'))
+
+
+writeToTextFile(makeLineList(readTextFile()))
