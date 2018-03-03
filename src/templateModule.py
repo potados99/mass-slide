@@ -17,6 +17,12 @@ def makeChapterList(raw):
 	chapterList.pop(0)
 	return chapterList
 
+def deleteSpace(List):
+	for chapter in List:
+		while chapter[1] == '': # until not empty space
+			chapter.pop(1)
+	return List
+
 def writeTemplate(new):
 	return nul
 

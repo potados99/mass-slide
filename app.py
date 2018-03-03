@@ -81,7 +81,7 @@ def newLine(text, size, bold):
 def savePresentation():
 	prs.save('/home/pi/WebDAV/test.pptx')	
 
-List = templateModule.makeChapterList(templateModule.readTemplate(sys.argv[1]))
+List = templateModule.deleteSpace(templateModule.makeChapterList(templateModule.readTemplate(sys.argv[1])))
 
 newPresentation()
 
@@ -109,15 +109,13 @@ for chapter in List:
 		# Empty
 		elif (line == "//"):
 			# create a blank page with black background
-			if (linebreakCount >= 1):
-				print ("//new page//")
-				linebreakCount = 0
+			print ("//black page//")
+			linebreakCount = 0
 	
-				blankSlide()
+			blankSlide()
 
 		# Title
 		elif (chapter.index(line) == 0): # first line
-#			if (List.index(chapter) != 0):
 			print ("\n//new chapter//\n")
 			print ("<" + line + ">")
 
@@ -156,9 +154,3 @@ for chapter in List:
 				newLine(text=line, size=SIZE, bold=BOLD)
 
 savePresentation()
-
-'''
-if __name__ == "__main__":
-if (len(sys.argv) > 1): # if arguments (except filename) exists, call function named sys.argv.[1]
-function = getattr(sys.modules[__name__], sys.argv[1])
-'''
