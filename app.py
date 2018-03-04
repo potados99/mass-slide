@@ -14,7 +14,7 @@ from modules import templateModule
 from modules import fontModule
 
 
-def new_slide(slideLayout):
+def add_slide(blank):
 	newSlide = prs.slides.add_slide(prs.slide_layouts[6]) 
 
 	left = top = Inches(0)
@@ -23,36 +23,25 @@ def new_slide(slideLayout):
 
 	backgroundShape = newSlide.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, top, width, height)
 
+	if blank: COLOR = RGBColor(0, 0, 0)
+	else: COLOR = RGBColor(255, 252, 197)
+
 	line = backgroundShape.line
-	line.color.rgb = RGBColor(255, 252, 197)
+	line.color.rgb = COLOR
 
 	fill = backgroundShape.fill
 	fill.solid()
-	fill.fore_color.rgb = RGBColor(255, 252, 197)	
+	fill.fore_color.rgb = COLOR
+
+	if not blank:
+		continue
 
 	textBox = newSlide.shapes.add_textbox(left, top, width, height)
-
 	global text_frame
 	text_frame = textBox.text_frame
 	text_frame.word_wrap = True
 	text_frame.auto_size = MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT
 	text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
-
-def blank_slide():
-	newSlide = prs.slides.add_slide(prs.slide_layouts[6])
-
-	left = top = Inches(0)
-	width = Inches(10)
-	height = Inches(7.5)
-
-	backgroundShape = newSlide.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, top, width, height)
-
-	line = backgroundShape.line
-	line.color.rgb = RGBColor(0, 0, 0)
-
-	fill = backgroundShape.fill
-	fill.solid()
-	fill.fore_color.rgb = RGBColor(0, 0, 0)	
 
 def new_line(text, size, bold):
 	p = text_frame.add_paragraph()
@@ -64,7 +53,7 @@ def new_line(text, size, bold):
 	run.font.size = Pt(size)
 	run.font.name = u"1훈하얀고양이 R"
 
-def make_presentation(List):
+def write_presentation(List):
 	for chapter in List:
 
 		linebreakCount = 0
@@ -96,7 +85,7 @@ def make_presentation(List):
 					continue
 
 				linebreakCount = 0 
-				blank_slide()
+				add_slide(blank=True)
 				# If empty mark seen after linebreak(s),
 				# then create new blank slide
 					
@@ -112,7 +101,7 @@ def make_presentation(List):
 				if (chapter[1] == "//"): 
 					continue
 
-				new_slide(6)
+				add_slide(blank=False)
 				# If the chapter doesn't start with blank slide,
 				# then create new slide
 
@@ -131,7 +120,7 @@ def make_presentation(List):
 					continue
 
 				linebreakCount = 0; 
-				new_slide(6)
+				add_slide(blank=False)
 				# If (bold | tiny | plane) texts seen after linebreak(s),
 				# then add new slide before add new line
 
@@ -175,6 +164,6 @@ prs = Presentation()
 
 List = templateModule.delete_space(templateModule.make_chapterList(templateModule.read_template(sys.argv[1])))
 
-make_presentation(List)
+write_presentation(List)
 
 prs.save('/home/pi/WebDAV/test.pptx')	
