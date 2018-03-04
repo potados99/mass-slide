@@ -61,108 +61,50 @@ def write_presentation(List):
 		BOLD = False
 
 		for line in chapter:
-			boldMatch = re.match('\*\*.+\*\*', line)
-			tinyMatch = re.match('\'.+\'', line)
 
-			if (line == ""): linebreakCount += 1
-			# Linebreak
-			# 줄바꿈
+			if (chapter.index(line) == 0): # Title
+				print ("[" + line + "]")
+				if not (chapter[1] == "//"): 
+					add_slide(blank=False)
 
-			elif (line == "***"):
-			# Bold mark
-			# 볼드체 표시
+			elif (line == "//"): # Blank mark
+				if (linebreakCount >= 1): 
+					linebreakCount = 0 
+					add_slide(blank=True)
 
+			elif (line == "***"): # Bold mark
 				if (BOLD): BOLD = False
 				else: BOLD = True
-				# Toggle
-				# 토글
 
-			elif (line == "//"):
-			# Empty mark
-			# 빈 페이지 표시
+			elif (line == ""): # Linebreak 
+				linebreakCount += 1
 
+			else: # Text
 				if (linebreakCount >= 1): 
-					continue
+					linebreakCount = 0; 
+					add_slide(blank=False)
 
-				linebreakCount = 0 
-				add_slide(blank=True)
-				# If empty mark seen after linebreak(s),
-				# then create new blank slide
-					
-				# 빈 페이지 표시가 줄바꿈(들) 후에 나타났을 때
-				# 새로운 빈 슬라이드를 생성
-
-			elif (chapter.index(line) == 0):
-			# Title
-			# 제목
-
-				print ("[" + line + "]")
-
-				if (chapter[1] == "//"): 
-					continue
-
-				add_slide(blank=False)
-				# If the chapter doesn't start with blank slide,
-				# then create new slide
-
-				# 챕터가 빈 슬라이드로 시작하지 않을 때
-				# 새 슬라이드를 생성
-					
-			else:
-			# Text (bold | tiny | plane)
-			# 텍스트 (볼드 | 작음 | 평문)
+				boldMatch = re.match('\*\*.+\*\*', line)
+				tinyMatch = re.match('\'.+\'', line)
 
 				SIZE = fontModule.set_font_size(chapter[0])
-				# Set font size by chapter title
-				# 챕터 제목에 따라 폰트 사이즈 설정
 
-				if (linebreakCount < 1): 
-					continue
-
-				linebreakCount = 0; 
-				add_slide(blank=False)
-				# If (bold | tiny | plane) texts seen after linebreak(s),
-				# then add new slide before add new line
-
-				# 텍스트가 줄바꿈(들) 후에 나타났을 때
-				# 새 줄을 추가하기 전에 새 슬라이드를 먼저 추가
-
-				if (boldMatch):
-				# Bold
-				# 볼드체
-
-					if (chapter.index(line) == 1): SIZE = fontModule.font_size('big')
-					# If line is the first bold text,
-					# then override font size set by chapter title
-
-					# 행이 첫번째 볼드체 텍스트라면,
-					# 챕터 제목에 의해 정해진 폰트 사이즈를 변경
-
+				if (boldMatch): # Bold
+					if (chapter.index(line) == 1): 
+						SIZE = fontModule.font_size('big')
 					new_line(text=boldMatch.group().replace("*", ""), size=SIZE, bold=True)
 
-				elif (tinyMatch):
-				# Tiny
-				# 작음
-
+				elif (tinyMatch): # Tiny
 					SIZE = fontModule.font_size('tiny')
-					# If line is the 'tiny',
-					# override font size set by chapter title
-
-					# 행이 작은 텍스트라면,
-					# 챕터 제목에 의해 정해진 폰트 사이즈를 변경
-
 					new_line(text=tinyMatch.group().replace("\'", ""), size=SIZE, bold=False)
 
-				else:
-				# Plane
-				# 평문
-
+				else: # Plane
 					new_line(text=line, size=SIZE, bold=BOLD)
 
 
 prs = Presentation()
 
-List = templateModule.delete_space(templateModule.make_chapterList(templateModule.read_template(sys.argv[1])))
+List = templateModule.delete_space(templateModule.make_chapter_list(templateModule.read_template(sys.argv[1])))
 
 write_presentation(List)
 

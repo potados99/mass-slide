@@ -11,7 +11,7 @@ def read_template(template):
 	return rawText
 
 # Split raw text by chapters(#) and split each chapters by lines(\n)
-def make_chapterList(raw):
+def make_chapter_list(raw):
         chapterList = [x.split('\n') for x in raw.split('#')]
 	chapterList.pop(0)
 	return chapterList
