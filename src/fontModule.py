@@ -35,18 +35,18 @@ MEDIUM_FONT_LIST = [
 BIG_FONT_LIST = [
 ]
 
-def fontSize(x):
+def font_size(x):
 	return {'big': 115, 'medium': 88, 'small': 72, 'tiny': 65}.get(x, '88')
 
-def setFontSize(t):
-	if t in SMALL_FONT_LIST:
-		return fontSize('small')
+def set_font_size(title):
+	if title in SMALL_FONT_LIST:
+		return font_size('small')
 
-	elif t in MEDIUM_FONT_LIST:
-		return fontSize('medium')
+	elif title in MEDIUM_FONT_LIST:
+		return font_size('medium')
 
-	elif t in BIG_FONT_LIST:
-		return fontSize('big')
+	elif title in BIG_FONT_LIST:
+		return font_size('big')
 
 	else:
-		return fontSize('medium')
+		return font_size('medium')

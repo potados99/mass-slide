@@ -14,26 +14,15 @@ from pptx.dml.color import RGBColor
 import templateModule
 import fontModule
 
-ref = Presentation('reference/sample.pptx')
-#xml_slides = ref.slides._sldIdLst
-#slides = list(xml_slides)
-#whiteSlide = ref.slides[0]
 
-def newPresentation():
-	global prs
-	prs = Presentation()
-
-def newSlide(slideLayout):
+def new_slide(slideLayout):
 	newSlide = prs.slides.add_slide(prs.slide_layouts[6]) 
-#	prs.slides.append(whiteSlide)
 
 	left = top = Inches(0)
 	width = Inches(10)
 	height = Inches(7.5)
 
-	backgroundShape = newSlide.shapes.add_shape(
-		MSO_SHAPE.RECTANGLE, left, top, width, height
-	)
+	backgroundShape = newSlide.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, top, width, height)
 
 	line = backgroundShape.line
 	line.color.rgb = RGBColor(255, 252, 197)
@@ -50,16 +39,14 @@ def newSlide(slideLayout):
 	text_frame.auto_size = MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT
 	text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
 
-def blankSlide():
-	newSlide = prs.slides.add_slide(prs.slide_layouts[6]) # blank
+def blank_slide():
+	newSlide = prs.slides.add_slide(prs.slide_layouts[6])
 
 	left = top = Inches(0)
 	width = Inches(10)
 	height = Inches(7.5)
 
-	backgroundShape = newSlide.shapes.add_shape(
-		MSO_SHAPE.RECTANGLE, left, top, width, height
-	)
+	backgroundShape = newSlide.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, top, width, height)
 
 	line = backgroundShape.line
 	line.color.rgb = RGBColor(0, 0, 0)
@@ -68,7 +55,7 @@ def blankSlide():
 	fill.solid()
 	fill.fore_color.rgb = RGBColor(0, 0, 0)	
 
-def newLine(text, size, bold):
+def new_line(text, size, bold):
 	p = text_frame.add_paragraph()
 	p.alignment = PP_ALIGN.CENTER
 
@@ -78,79 +65,106 @@ def newLine(text, size, bold):
 	run.font.size = Pt(size)
 	run.font.name = u"1훈하얀고양이 R"
 
-def savePresentation():
-	prs.save('/home/pi/WebDAV/test.pptx')	
+def make_presentation(List):
+	for chapter in List:
 
-List = templateModule.deleteSpace(templateModule.makeChapterList(templateModule.readTemplate(sys.argv[1])))
+		linebreakCount = 0
+		SIZE = 0
+		BOLD = False
 
-newPresentation()
+		for line in chapter:
+			boldMatch = re.match('\*\*.+\*\*', line)
+			tinyMatch = re.match('\'.+\'', line)
 
-for chapter in List:
+			if (line == ""): linebreakCount += 1
+			# Linebreak
+			# 줄바꿈
 
-	linebreakCount = 0
-	SIZE = 0
-	BOLD = False
+			elif (line == "***"):
+			# Bold mark
+			# 볼드체 표시
 
-	for line in chapter:
-		boldMatch = re.match('\*\*.+\*\*', line)
-		tinyMatch = re.match('\'.+\'', line)
+				if (BOLD): BOLD = False
+				else: BOLD = True
+				# Toggle
+				# 토글
 
-		# Linebreak
-		if (line == ""):
-			linebreakCount += 1
+			elif (line == "//"):
+			# Empty mark
+			# 빈 페이지 표시
 
-		# Bold mark
-		elif (line == "***"):
-			if (BOLD):
-				BOLD = False
+				if (linebreakCount >= 1): linebreakCount = 0; blank_slide()
+				# If empty mark seen after linebreak(s),
+				# then create new blank slide
+					
+				# 빈 페이지 표시가 줄바꿈(들) 후에 나타났을 때
+				# 새로운 빈 슬라이드를 생성
+
+			elif (chapter.index(line) == 0):
+			# Title
+			# 제목
+
+				print ("[" + line + "]")
+
+				if (chapter[1] != "//"): new_slide(6)
+				# If the chapter doesn't start with blank slide,
+				# then create new slide
+
+				# 챕터가 빈 슬라이드로 시작하지 않을 때
+				# 새 슬라이드를 생성
+					
 			else:
-				BOLD = True
+			# Text (bold | tiny | plane)
+			# 텍스트 (볼드 | 작음 | 평문)
 
-		# Empty
-		elif (line == "//"):
-			# create a blank page with black background
-			print ("//black page//")
-			linebreakCount = 0
-	
-			blankSlide()
+				SIZE = fontModule.set_font_size(chapter[0])
+				# Set font size by chapter title
+				# 챕터 제목에 따라 폰트 사이즈 설정
 
-		# Title
-		elif (chapter.index(line) == 0): # first line
-			print ("\n//new chapter//\n")
-			print ("<" + line + ">")
+				if (linebreakCount >= 1): linebreakCount = 0; new_slide(6)
+				# If (bold | tiny | plane) texts seen after linebreak(s),
+				# then add new slide before add new line
 
-			newSlide(6)
+				# 텍스트가 줄바꿈(들) 후에 나타났을 때
+				# 새 줄을 추가하기 전에 새 슬라이드를 먼저 추가
 
-		# Text
-		else:
-			SIZE = fontModule.setFontSize(chapter[0])
-			
-			if (linebreakCount >= 1):
-				print ("//new page//")
-				linebreakCount = 0
+				if (boldMatch):
+				# Bold
+				# 볼드체
 
-				newSlide(6)
+					if (chapter.index(line) == 1): SIZE = fontModule.font_size('big')
+					# If line is the first bold text,
+					# then override font size set by chapter title
 
-			# Bold
-			if (boldMatch):
-				print ("[" + boldMatch.group().replace("*", "") + "]")
+					# 행이 첫번째 볼드체 텍스트라면,
+					# 챕터 제목에 의해 정해진 폰트 사이즈를 변경
 
-				if (chapter.index(line) == 1): # first bold line
-					SIZE = fontModule.fontSize('big')
+					new_line(text=boldMatch.group().replace("*", ""), size=SIZE, bold=True)
 
-				newLine(text=boldMatch.group().replace("*", ""), size=SIZE, bold=True)
+				elif (tinyMatch):
+				# Tiny
+				# 작음
 
-			# Small
-			elif (tinyMatch):
-				print ("(" + tinyMatch.group().replace("\'", "") + ")")
-				SIZE = fontModule.fontSize('tiny')
+					SIZE = fontModule.font_size('tiny')
+					# If line is the 'tiny',
+					# override font size set by chapter title
 
-				newLine(text=tinyMatch.group().replace("\'", ""), size=SIZE, bold=False)
+					# 행이 작은 텍스트라면,
+					# 챕터 제목에 의해 정해진 폰트 사이즈를 변경
 
-			# Plane
-			else:
-				print (line)
+					new_line(text=tinyMatch.group().replace("\'", ""), size=SIZE, bold=False)
 
-				newLine(text=line, size=SIZE, bold=BOLD)
+				else:
+				# Plane
+				# 평문
 
-savePresentation()
+					new_line(text=line, size=SIZE, bold=BOLD)
+
+
+prs = Presentation()
+
+List = templateModule.delete_space(templateModule.make_chapterList(templateModule.read_template(sys.argv[1])))
+
+make_presentation(List)
+
+prs.save('/home/pi/WebDAV/test.pptx')	
