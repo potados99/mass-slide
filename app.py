@@ -2,7 +2,6 @@
 
 import re 
 import sys 
-sys.path.insert(0, 'src/') 
 
 from pptx import Presentation
 from pptx.util import Inches, Pt
@@ -11,8 +10,8 @@ from pptx.enum.text import MSO_ANCHOR, MSO_AUTO_SIZE
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.dml.color import RGBColor
 
-import templateModule
-import fontModule
+from modules import templateModule
+from modules import fontModule
 
 
 def new_slide(slideLayout):
@@ -93,7 +92,11 @@ def make_presentation(List):
 			# Empty mark
 			# 빈 페이지 표시
 
-				if (linebreakCount >= 1): linebreakCount = 0; blank_slide()
+				if (linebreakCount >= 1): 
+					continue
+
+				linebreakCount = 0 
+				blank_slide()
 				# If empty mark seen after linebreak(s),
 				# then create new blank slide
 					
@@ -106,7 +109,10 @@ def make_presentation(List):
 
 				print ("[" + line + "]")
 
-				if (chapter[1] != "//"): new_slide(6)
+				if (chapter[1] == "//"): 
+					continue
+
+				new_slide(6)
 				# If the chapter doesn't start with blank slide,
 				# then create new slide
 
@@ -121,7 +127,11 @@ def make_presentation(List):
 				# Set font size by chapter title
 				# 챕터 제목에 따라 폰트 사이즈 설정
 
-				if (linebreakCount >= 1): linebreakCount = 0; new_slide(6)
+				if (linebreakCount < 1): 
+					continue
+
+				linebreakCount = 0; 
+				new_slide(6)
 				# If (bold | tiny | plane) texts seen after linebreak(s),
 				# then add new slide before add new line
 
