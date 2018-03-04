@@ -2,28 +2,46 @@
 
 import re
 
-TEMPLATE_PATH='/home/pi/Projects/massSlide/templates'
+PR_PATH = 'home/pi/Projects/massSlide'
 
-def read_template(template):
-	f = open(TEMPLATE_PATH + '/' + template + '.txt', 'r')
+RAW_PATH = PR_PATH + '/raw'
+PRE_READY_PATH = PR_PATH + '/pre-ready'
+PPTX_READY_PATH = PR_PATH + '/ready'
+
+def read_pptx_ready(filename):
+	f = open(PPTX_READY_PATH + '/' + filename + '.txt', 'r')
 	rawText = f.read()
 	f.close
-	return rawText
 
-# Split raw text by chapters(#) and split each chapters by lines(\n)
-def make_chapter_list(raw):
-        chapterList = [x.split('\n') for x in raw.split('#')]
+        chapterList = [x.split('\n') for x in rawText.split('#')]
 	chapterList.pop(0)
+
+	for chapter in chapterList:
+		while chapter[1] == '':
+			chapter.pop(1)
+
 	return chapterList
 
-def delete_space(List):
-	for chapter in List:
-		while chapter[1] == '': # until not empty space
-			chapter.pop(1)
-	return List
+def read_raw(new):
+	rawList = [
+		RAW_PATH + 'automated/cover.txt', 
+		RAW_PATH + 'automated/pardon.txt', 
+		RAW_PATH + 'automated/collect.txt', 
+		RAW_PATH + 'automated/first_reading', 
+		RAW_PATH + 'automated/second_reading', 
+		RAW_PATH + 'automated/acclamation.txt', 
+		RAW_PATH + 'automated/gospel.txt', 
+		RAW_PATH + 'automated/antiphon.txt', 
+		RAW_PATH + 'chants',
+		RAW_PATH + 'prayers',
+		RAW_PATH + 'quiz'
+	]
 
-def write_template(new):
 	return nul
 
+def write_pre_ready(new):
+	return nul
 
+def write_pptx_ready(new):
+	return nul
 
