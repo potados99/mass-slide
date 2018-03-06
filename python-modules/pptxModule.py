@@ -88,19 +88,19 @@ def write_presentation(prs, List):
 					linebreakCount = 0; 
 					tf = add_slide(presentation=prs, blank=False)
 
-				boldMatch = re.match('\*\*.+\*\*', line)
-				tinyMatch = re.match('\'.+\'', line)
+				boldMatch = re.match('\*\*(.+)\*\*', line)
+				tinyMatch = re.match('\'(.+)\'', line)
 
 				SIZE = fontModule.set_font_size(chapter[0])
 
 				if (boldMatch): # Bold
 					if (chapter.index(line) == 1): 
 						SIZE = fontModule.font_size('big')
-					add_line(text_frame=tf, text=boldMatch.group().replace("*", ""), size=SIZE, bold=True)
+					add_line(text_frame=tf, text=boldMatch.group(1), size=SIZE, bold=True)
 
 				elif (tinyMatch): # Tiny
 					SIZE = fontModule.font_size('tiny')
-					add_line(text_frame=tf, text=tinyMatch.group().replace("\'", ""), size=SIZE, bold=False)
+					add_line(text_frame=tf, text=tinyMatch.group(1), size=SIZE, bold=False)
 
 				else: # Plane
 					add_line(text_frame=tf, text=line, size=SIZE, bold=BOLD)
