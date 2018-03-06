@@ -57,7 +57,7 @@ def add_line(text_frame, text, size, bold):
 	run.font.size = Pt(size)
 	run.font.name = u"1훈하얀고양이 R"
 
-def write_presentation(prs, List):
+def write_presentation(Presentation, List):
 	for chapter in List:
 
 		linebreakCount = 0
@@ -69,12 +69,12 @@ def write_presentation(prs, List):
 			if (chapter.index(line) == 0): # Title
 				print ("[" + line + "]")
 				if not (chapter[1] == "//"): 
-					tf = add_slide(presentation=prs, blank=False)
+					tf = add_slide(presentation=Presentation, blank=False)
 
 			elif (line == "//"): # Blank mark
 				if (linebreakCount >= 1): 
 					linebreakCount = 0 
-					tf = add_slide(presentation=prs, blank=True)
+					tf = add_slide(presentation=Presentation, blank=True)
 
 			elif (line == "***"): # Bold mark
 				if (BOLD): BOLD = False
@@ -86,7 +86,7 @@ def write_presentation(prs, List):
 			else: # Text
 				if (linebreakCount >= 1): 
 					linebreakCount = 0; 
-					tf = add_slide(presentation=prs, blank=False)
+					tf = add_slide(presentation=Presentation, blank=False)
 
 				boldMatch = re.match('\*\*(.+)\*\*', line)
 				tinyMatch = re.match('\'(.+)\'', line)
