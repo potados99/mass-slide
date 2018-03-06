@@ -42,7 +42,7 @@ def convert_title(title, eng):
 def write_raw():
 	return nul
 
-def get_raw_list():
+def get_raw_dict():
 	rawFileList = [
 		RAW + '/automated/cover.txt', 
 		RAW + '/automated/pardon.txt', 
@@ -99,7 +99,7 @@ def get_done_list(filename):
 
 
 
-"""
+'''
 Dict = get_raw_list()
 
 for title in Dict:
@@ -107,4 +107,4 @@ for title in Dict:
 	for lines in Dict[title]:
 		print lines
 
-"""
+'''

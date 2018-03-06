@@ -1,12 +1,30 @@
 #-*- coding: utf-8 -*-
 
+import sys
 import templateModule
 import textModule
 
 
-raw = templateModule.get_raw_list()
+rawDict = templateModule.get_raw_dict()
 
-processed = textModule.process_gospel(raw["복음"])
+'''
+processedCol = textModule.process_gospel(rawDict["복음"])
+for i in processedCol:
+	print i
 
-for i in processed:
+processedCht = textModule.process_chants(rawDict["성가"])
+for i in processedCht:
+	print i
+'''
+
+#def process(title, list):
+	
+
+processedList = []
+
+for title in rawDict:
+	function = getattr(textModule, "process_" + templateModule.convert_title(title=title, eng=True))
+	processedList.extend(function(rawDict[title]))
+
+for i in processedList:
 	print i
