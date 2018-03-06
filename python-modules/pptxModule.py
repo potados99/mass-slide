@@ -14,7 +14,10 @@ from modules import templateModule
 from modules import fontModule
 
 
-def add_slide(blank):
+def new_presentation():
+	return Presentation()
+
+def add_slide(presentation, blank):
 	newSlide = prs.slides.add_slide(prs.slide_layouts[6]) 
 
 	left = top = Inches(0)
@@ -37,13 +40,14 @@ def add_slide(blank):
 		continue
 
 	textBox = newSlide.shapes.add_textbox(left, top, width, height)
-	global text_frame
 	text_frame = textBox.text_frame
 	text_frame.word_wrap = True
 	text_frame.auto_size = MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT
 	text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
 
-def new_line(text, size, bold):
+	return text_frame
+
+def add_line(text_frame, text, size, bold):
 	p = text_frame.add_paragraph()
 	p.alignment = PP_ALIGN.CENTER
 
@@ -53,7 +57,7 @@ def new_line(text, size, bold):
 	run.font.size = Pt(size)
 	run.font.name = u"1훈하얀고양이 R"
 
-def write_presentation(List):
+def write_presentation(prs, List):
 	for chapter in List:
 
 		linebreakCount = 0
@@ -65,12 +69,12 @@ def write_presentation(List):
 			if (chapter.index(line) == 0): # Title
 				print ("[" + line + "]")
 				if not (chapter[1] == "//"): 
-					add_slide(blank=False)
+					tf = add_slide(presentation=prs, blank=False)
 
 			elif (line == "//"): # Blank mark
 				if (linebreakCount >= 1): 
 					linebreakCount = 0 
-					add_slide(blank=True)
+					tf = add_slide(presentation=prs, blank=True)
 
 			elif (line == "***"): # Bold mark
 				if (BOLD): BOLD = False
@@ -82,7 +86,7 @@ def write_presentation(List):
 			else: # Text
 				if (linebreakCount >= 1): 
 					linebreakCount = 0; 
-					add_slide(blank=False)
+					tf = add_slide(presentation=prs, blank=False)
 
 				boldMatch = re.match('\*\*.+\*\*', line)
 				tinyMatch = re.match('\'.+\'', line)
@@ -92,20 +96,24 @@ def write_presentation(List):
 				if (boldMatch): # Bold
 					if (chapter.index(line) == 1): 
 						SIZE = fontModule.font_size('big')
-					new_line(text=boldMatch.group().replace("*", ""), size=SIZE, bold=True)
+					add_line(text_frame=tf, text=boldMatch.group().replace("*", ""), size=SIZE, bold=True)
 
 				elif (tinyMatch): # Tiny
 					SIZE = fontModule.font_size('tiny')
-					new_line(text=tinyMatch.group().replace("\'", ""), size=SIZE, bold=False)
+					add_line(text_frame=tf, text=tinyMatch.group().replace("\'", ""), size=SIZE, bold=False)
 
 				else: # Plane
-					new_line(text=line, size=SIZE, bold=BOLD)
+					add_line(text_frame=tf, text=line, size=SIZE, bold=BOLD)
 
+def save_presentation(prs, path):
+	prs.save(path)
 
+'''
 prs = Presentation()
 
-List = templateModule.delete_space(templateModule.make_chapter_list(templateModule.read_template(sys.argv[1])))
+List = templateModule.read_template(sys.argv[1])
 
 write_presentation(List)
 
 prs.save('/home/pi/WebDAV/test.pptx')	
+'''
