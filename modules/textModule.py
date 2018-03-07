@@ -44,7 +44,14 @@ def cut_text(text, maxLength):
 
 
 def process_cover(rawList):
-	return ['test']
+	coverList = []
+	mainTextList = []
+	for line in rawList:
+		if not (line == ""):
+			mainTextList.append("**" + line + "**")
+	coverList.extend(mainTextList)
+
+	return coverList
 
 def process_pardon(rawList):
 	return ['test']
@@ -63,7 +70,7 @@ def process_acclamation(rawList):
 
 def process_gospel(rawList):
 	title = rawList.pop(0)
-	mainText = cut_text(text=" ".join(rawList), maxLength=60)
+	mainTextList = cut_text(text=" ".join(rawList), maxLength=60)
 
 	gospelList = [
 
@@ -80,7 +87,7 @@ def process_gospel(rawList):
 
 	]
 
-	gospelList.extend(mainText)
+	gospelList.extend(mainTextList)
 	gospelList.extend(["", "", ""])
 
 	return gospelList
