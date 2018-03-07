@@ -103,7 +103,25 @@ def process_second_reading(rawList):
 	return second_readingList
 
 def process_acclamation(rawList):
-	return ['test']
+	acclamationList = [
+		"#복음환호송",
+		"",
+		"**복음환호송**",
+		""
+	]
+	mainTextList = []
+	tempList = [cut_text(text=x, maxLength=40) for x in rawList]
+
+	for page in tempList:
+		for line in page:
+			mainTextList.append(line.replace("(", "").replace(")", ""))
+		if (page != tempList[-1]):
+			mainTextList.append("")
+
+	acclamationList.extend(mainTextList)
+	acclamationList.extend(["", ""])
+
+	return acclamationList
 
 def process_gospel(rawList):
 	title = rawList.pop(0)
@@ -127,9 +145,18 @@ def process_gospel(rawList):
 	return gospelList
 
 def process_antiphon(rawList):
+	mainTextList = cut_text(text=" ".join(rawList), maxLength=60)
 
+	antiphonList = [
+		"#영성체송", 
+		"", 
+		"**영성체송**", 
+		""
+	]
+	antiphonList.extend(mainTextList)
+	antiphonList.extend(["", "", ""])
 
-	return ['test']
+	return antiphonList
 
 def process_chants(rawList):
 	chantsList = []
