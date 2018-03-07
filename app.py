@@ -1,8 +1,8 @@
 #-*- coding: utf-8 -*-
 
 import sys
-from python-modules import templateModule
-from python-modules import textModule
+from modules import templateModule
+from modules import textModule
 
 
 rawDict = templateModule.get_raw_dict()

@@ -41,12 +41,16 @@ def cut_text(text, maxLength):
 	return lineList
 
 
-def process_cover(rawList):
-	mainTextList = ["**" + x + "**" for x in rawList if not x == ""]
 
+def process_cover(rawList):
 	coverList = ["#표지", ""]
+	'''
+	mainTextList = []
+	for line in rawList:
+		if not (line == ""):
 	coverList.extend(mainTextList)
-	coverList.extend(["", "", ""])
+	'''
+	mainTextList = ["**" + x + "**" for x in rawList]
 
 	return coverList
 
@@ -59,48 +63,20 @@ def process_pardon(rawList):
 		"**입당송**", 
 		""
 	]
+
 	pardonList.extend(mainTextList)
 	pardonList.extend(["", "", ""])
 
 	return pardonList
 
 def process_collect(rawList):
-	mainTextList = cut_text(text=" ".join(rawList), maxLength=60)
-
-	collectList = [
-		"#본기도", 
-		"", 
-	]
-	collectList.extend(mainTextList)
-	collectList.extend(["", "", ""])
-
-	return collectList
+	return ['test']
 
 def process_first_reading(rawList):
-	title = rawList.pop(0)
-
-	first_readingList = [
-		"#제1독서", 
-		"",
-		"**제2 독서**",
-		"\'" + title + "\'"
-	]
-	first_readingList.extend(["", "", ""])
-
-	return first_readingList
+	return ['test']
 
 def process_second_reading(rawList):
-	title = rawList.pop(0)
-
-	second_readingList = [
-		"#제2독서", 
-		"",
-		"**제2 독서**",
-		"\'" + title + "\'"
-	]
-	second_readingList.extend(["", "", ""])
-
-	return second_readingList
+	return ['test']
 
 def process_acclamation(rawList):
 	return ['test']
@@ -121,17 +97,18 @@ def process_gospel(rawList):
 		"**◎주님 영광 받으소서.**",
 		""
 	]
+
 	gospelList.extend(mainTextList)
 	gospelList.extend(["", "", ""])
 
 	return gospelList
 
+
 def process_antiphon(rawList):
-
-
 	return ['test']
 
 def process_chants(rawList):
+
 	chantsList = []
 
 	entrance = ["#입당성가", "", "**입당성가**"]
