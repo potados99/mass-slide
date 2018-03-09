@@ -12,7 +12,7 @@ def read_file(file):
 def cut_text(text, maxLength):
 	lineList = []
 
-	print("Removing patterns")
+#	print("Removing patterns")
 
 	temp1 = re.sub('\d{1,2},\d{1,2}', '', text) 
 	temp2 = re.sub('\d{1,2} ', '', temp1) 
@@ -25,8 +25,8 @@ def cut_text(text, maxLength):
 	
 		# when to add a new line, if it overs the length of total texts
 		if location + length >= len(text): #last line
-			print("Appending last line to list, " + str(length) + "characters")
-			lineList.append(text[location:len(text)-1]) # make new line from current character to last character
+			#print("Appending last line to list, " + str(length) + "characters")
+			lineList.append(text[location:len(text)]) # make new line from current character to last character
 			break # break while statement
    
 		while text[location + length - 1] != " ":
@@ -34,7 +34,7 @@ def cut_text(text, maxLength):
 
 		lineList.append(text[location:location+length])
 		lineList.append("")
-		print("Appeding lines to list, " + str(length) + "characters")
+#		print("Appeding lines to list, " + str(length) + "characters")
 		location += length
 		lineCount += 1
 
@@ -43,7 +43,6 @@ def cut_text(text, maxLength):
 
 def process_cover(rawList):
 	mainTextList = ["**" + x + "**" for x in rawList if not x == ""]
-
 	coverList = ["#표지", ""]
 	coverList.extend(mainTextList)
 	coverList.extend(["", "", ""])
@@ -52,7 +51,6 @@ def process_cover(rawList):
 
 def process_pardon(rawList):
 	mainTextList = cut_text(text=" ".join(rawList), maxLength=60)
-
 	pardonList = [
 		"#입당송", 
 		"", 
@@ -66,7 +64,6 @@ def process_pardon(rawList):
 
 def process_collect(rawList):
 	mainTextList = cut_text(text=" ".join(rawList), maxLength=60)
-
 	collectList = [
 		"#본기도", 
 		"", 
@@ -103,19 +100,17 @@ def process_second_reading(rawList):
 	return second_readingList
 
 def process_acclamation(rawList):
+	mainTextList = []
 	acclamationList = [
 		"#복음환호송",
 		"",
 		"**복음환호송**",
 		""
 	]
-	mainTextList = []
-	tempList = [cut_text(text=x, maxLength=40) for x in rawList]
 
-	for page in tempList:
-		for line in page:
-			mainTextList.append(line.replace("(", "").replace(")", ""))
-		if (page != tempList[-1]):
+	for line in rawList:
+		mainTextList.extend(cut_text(text=line.replace("(", "").replace(")", ""), maxLength=60))
+		if not (line == rawList[-1]):
 			mainTextList.append("")
 
 	acclamationList.extend(mainTextList)
@@ -126,7 +121,6 @@ def process_acclamation(rawList):
 def process_gospel(rawList):
 	title = rawList.pop(0)
 	mainTextList = cut_text(text=" ".join(rawList), maxLength=60)
-
 	gospelList = [
 		"#복음",
 		"",
@@ -146,7 +140,6 @@ def process_gospel(rawList):
 
 def process_antiphon(rawList):
 	mainTextList = cut_text(text=" ".join(rawList), maxLength=60)
-
 	antiphonList = [
 		"#영성체송", 
 		"", 
@@ -191,10 +184,54 @@ def process_chants(rawList):
 	return chantsList
 
 def process_prayers(rawList):
-	return ['test']
+	mainTextList = []
+	prayersList = [
+		"#보편지향기도",
+		"",
+	]
+
+	for line in rawList:
+		titleMatch = re.match('\d.+', line)
+
+		if (line == ""): # Empty line
+			continue
+
+		elif titleMatch: # Title
+			mainTextList.extend(["***", line, "***"])
+			mainTextList.append("")
+		else:		 # Main Text
+			mainTextList.extend(cut_text(text=line, maxLength=60))
+			mainTextList.append("")
+
+	prayersList.extend(mainTextList)
+	prayersList.extend(["", ""])
+
+	return prayersList
 
 def process_quiz(rawList):
-	return ['test']
+	mainTextList = []
+	quizList = [
+		"#강론",
+		""
+	]
+
+	lineBreak = 0
+	for line in rawList:
+		titleMatch = re.match('[A-Z].+', line)
+	
+		if (line == ""): # Empty line
+			lineBreak += 1
+
+		elif (lineBreak >= 1):
+			mainTextList.append("")
+			lineBreak = 0
+
+		mainTextList.extend(cut_text(text=line, maxLength=60))
+
+	quizList.extend(mainTextList)
+	quizList.extend(["", "", ""])
+
+	return quizList
 
 
 
