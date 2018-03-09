@@ -41,9 +41,6 @@ def get_chapter_list(rawText, original):
 
 	return chapterList
 
-def parse():
-	return nul
-
 def convert_title(title, eng):
 	titleList = [
 		['표지', 'cover'],
@@ -122,5 +119,3 @@ def get_done_chapter_list(fileName):
 	rawText = read_file(DONE + '/' + fileName + '.txt')
 
 	return get_chapter_list(rawText=rawText, original=False)
-
-

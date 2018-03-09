@@ -10,9 +10,7 @@ from pptx.enum.text import MSO_ANCHOR, MSO_AUTO_SIZE
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.dml.color import RGBColor
 
-from modules import templateModule
 from modules import fontModule
-
 
 def new_presentation():
 	return Presentation()

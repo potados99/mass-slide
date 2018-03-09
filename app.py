@@ -4,24 +4,24 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-from modules import templateModule
-from modules import textModule
+from modules import IOModule
+from modules import processModule
 from modules import pptxModule
 
-rawDict = templateModule.get_raw_chapter_dict()
+rawDict = IOModule.get_raw_chapter_dict()
 
 rawChapterList = []
 for title in rawDict:
-	processFunction = getattr(textModule, "process_" + templateModule.convert_title(title=title, eng=True))
+	processFunction = getattr(processModule, "process_" + IOModule.convert_title(title=title, eng=True))
 	rawChapterList.append(processFunction(rawDict[title]))
 
-templateModule.write_processed(fileName='recent', chapterList=rawChapterList)
+IOModule.write_processed(fileName='recent', chapterList=rawChapterList)
 
-processedChapterList = templateModule.get_processed_chapter_list(fileName='recent')
+processedChapterList = IOModule.get_processed_chapter_list(fileName='recent')
 
-templateModule.write_done(fileName='recent', chapterList=processedChapterList, template='lent')
+IOModule.write_done(fileName='recent', chapterList=processedChapterList, template='lent')
 
-doneChapterList = templateModule.get_done_chapter_list(fileName='recent')
+doneChapterList = IOModule.get_done_chapter_list(fileName='recent')
 
 myPrs = pptxModule.new_presentation()
 
