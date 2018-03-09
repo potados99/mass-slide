@@ -18,7 +18,7 @@ def new_presentation():
 	return Presentation()
 
 def add_slide(presentation, blank):
-	newSlide = prs.slides.add_slide(prs.slide_layouts[6]) 
+	newSlide = presentation.slides.add_slide(presentation.slide_layouts[6]) 
 
 	left = top = Inches(0)
 	width = Inches(10)
@@ -37,15 +37,13 @@ def add_slide(presentation, blank):
 	fill.fore_color.rgb = COLOR
 
 	if not blank:
-		continue
+		textBox = newSlide.shapes.add_textbox(left, top, width, height)
+		text_frame = textBox.text_frame
+		text_frame.word_wrap = True
+		text_frame.auto_size = MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT
+		text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
 
-	textBox = newSlide.shapes.add_textbox(left, top, width, height)
-	text_frame = textBox.text_frame
-	text_frame.word_wrap = True
-	text_frame.auto_size = MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT
-	text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
-
-	return text_frame
+		return text_frame
 
 def add_line(text_frame, text, size, bold):
 	p = text_frame.add_paragraph()
@@ -107,13 +105,3 @@ def write_presentation(Presentation, List):
 
 def save_presentation(prs, path):
 	prs.save(path)
-
-'''
-prs = Presentation()
-
-List = templateModule.read_template(sys.argv[1])
-
-write_presentation(List)
-
-prs.save("/home/pi/WebDAV/test.pptx")	
-'''

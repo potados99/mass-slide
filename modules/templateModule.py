@@ -27,6 +27,7 @@ def write_file(file, chapterList):
 def get_chapter_list(rawText, original):
         chapterList = [x.split('\n') for x in rawText.split('#')]
 	chapterList.pop(0)
+
 	if original:
 		for chapter in chapterList:
 			chapter[0] = '#' + chapter[0]
@@ -34,6 +35,9 @@ def get_chapter_list(rawText, original):
 		for chapter in chapterList:
 			while (chapter[1] == '') and (len(chapter) >= 3):
 				chapter.pop(1)
+	
+	for chapter in chapterList:
+		chapter.pop(-1)
 
 	return chapterList
 
@@ -111,17 +115,6 @@ def write_done(fileName, chapterList, template):
 		for chapterOfTemplate in templateList:
 			if chapterOfList[0] == chapterOfTemplate[0]:
 				templateList[templateList.index(chapterOfTemplate)] = chapterOfList
-
-#	for i in range(len(chapterList) - 1):
-#		for j in range(len(templateList) - 1):
-#			if chapterList[i][0] == templateList[j][0]:
-#				templateList[j] = chapterList[i]
-#				print(templateList[j])
-#				print(List[i])
-
-	for i in get_chapter_list(rawText=rawText, original=True):
-		for j in i:
-			print j	
 
 	write_file(file=DONE + '/' + fileName + '.txt', chapterList=templateList)
 
