@@ -23,10 +23,6 @@ templateModule.write_done(fileName='recent', chapterList=processedChapterList, t
 
 doneChapterList = templateModule.get_done_chapter_list(fileName='recent')
 
-for chapter in doneChapterList:
-	for i in chapter:
-		print i
-
 myPrs = pptxModule.new_presentation()
 
 pptxModule.write_presentation(Presentation=myPrs, List=doneChapterList)

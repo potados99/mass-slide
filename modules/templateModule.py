@@ -124,12 +124,3 @@ def get_done_chapter_list(fileName):
 	return get_chapter_list(rawText=rawText, original=False)
 
 
-'''
-Dict = get_raw_list()
-
-for title in Dict:
-	print (title)
-	for lines in Dict[title]:
-		print lines
-
-'''

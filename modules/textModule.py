@@ -6,6 +6,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 CHANTS = '/home/pi/Projects/massSlide/chants'
+LINE_LENGTH = 35
 
 def read_file(file):
         f = open(file, 'r')
@@ -22,6 +23,7 @@ def cut_text(text, maxLength):
 
 	location = 0
 	lineCount = 0
+
 	while location < len(text): # until current character reaches the last character of texts
 		length = maxLength # recommanded length of each single line
 	
@@ -34,9 +36,11 @@ def cut_text(text, maxLength):
 			length -= 1
 
 		lineList.append(text[location:location+length])
-		lineList.append("")
 		location += length
 		lineCount += 1
+		if (lineCount >= 5):
+			lineList.append("")
+			lineCount = 0
 
 	return lineList
 
@@ -50,7 +54,7 @@ def process_cover(rawList):
 	return coverList
 
 def process_pardon(rawList):
-	mainTextList = cut_text(text=" ".join(rawList), maxLength=60)
+	mainTextList = cut_text(text=" ".join(rawList), maxLength=LINE_LENGTH)
 	pardonList = [
 		"#입당송", 
 		"", 
@@ -63,10 +67,12 @@ def process_pardon(rawList):
 	return pardonList
 
 def process_collect(rawList):
-	mainTextList = cut_text(text=" ".join(rawList), maxLength=60)
+	mainTextList = cut_text(text=" ".join(rawList), maxLength=LINE_LENGTH)
 	collectList = [
 		"#본기도", 
-		"", 
+		"",
+		"**본기도**",
+		"" 
 	]
 	collectList.extend(mainTextList)
 	collectList.extend(["", "", ""])
@@ -109,7 +115,7 @@ def process_acclamation(rawList):
 	]
 
 	for line in rawList:
-		mainTextList.extend(cut_text(text=line.replace("(", "").replace(")", ""), maxLength=60))
+		mainTextList.extend(cut_text(text=line.replace("(", "").replace(")", ""), maxLength=LINE_LENGTH))
 		if not (line == rawList[-1]):
 			mainTextList.append("")
 
@@ -120,7 +126,7 @@ def process_acclamation(rawList):
 
 def process_gospel(rawList):
 	title = rawList.pop(0)
-	mainTextList = cut_text(text=" ".join(rawList), maxLength=60)
+	mainTextList = cut_text(text=" ".join(rawList), maxLength=LINE_LENGTH)
 	gospelList = [
 		"#복음",
 		"",
@@ -129,17 +135,26 @@ def process_gospel(rawList):
 		"",
 		"†주님께서 여러분과 함께",
 		"**◎또한 사제의 영과 함께**",
-		"†요한이 전한 거룩한 복음입니다.",
+		"",
+		"†요한이 전한",
+		"거룩한 복음입니다.",
 		"**◎주님 영광 받으소서.**",
 		""
 	]
+	gospelListTrail = [
+		"",
+		"주님의 말씀입니다.",
+		"**◎ 그리스도님 찬미합니다.**",
+		""
+	]
 	gospelList.extend(mainTextList)
+	gospelList.extend(gospelListTrail)
 	gospelList.extend(["", "", ""])
 
 	return gospelList
 
 def process_antiphon(rawList):
-	mainTextList = cut_text(text=" ".join(rawList), maxLength=60)
+	mainTextList = cut_text(text=" ".join(rawList), maxLength=LINE_LENGTH)
 	antiphonList = [
 		"#영성체송", 
 		"", 
@@ -188,6 +203,8 @@ def process_prayers(rawList):
 	prayersList = [
 		"#보편지향기도",
 		"",
+		"**보편지향기도**",
+		""
 	]
 
 	for line in rawList:
@@ -200,7 +217,7 @@ def process_prayers(rawList):
 			mainTextList.extend(["***", line, "***"])
 			mainTextList.append("")
 		else:		 # Main Text
-			mainTextList.extend(cut_text(text=line, maxLength=60))
+			mainTextList.extend(cut_text(text=line, maxLength=LINE_LENGTH))
 			mainTextList.append("")
 
 	prayersList.extend(mainTextList)
@@ -212,6 +229,8 @@ def process_quiz(rawList):
 	mainTextList = []
 	quizList = [
 		"#강론",
+		"",
+		"**강론**",
 		""
 	]
 
@@ -226,7 +245,7 @@ def process_quiz(rawList):
 			mainTextList.append("")
 			lineBreak = 0
 
-		mainTextList.extend(cut_text(text=line, maxLength=60))
+		mainTextList.extend(cut_text(text=line, maxLength=LINE_LENGTH))
 
 	quizList.extend(mainTextList)
 	quizList.extend(["", "", ""])

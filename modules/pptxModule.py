@@ -66,7 +66,9 @@ def write_presentation(Presentation, List):
 
 			if (chapter.index(line) == 0): # Title
 				print ("[" + line + "]")
-				if not (chapter[1] == "//"): 
+				if (line == "BLANK"):
+					add_slide(presentation=Presentation, blank=True)
+				elif (chapter[1] != "//"): 
 					tf = add_slide(presentation=Presentation, blank=False)
 
 			elif (line == "//"): # Blank mark
