@@ -71,8 +71,11 @@ python app.py
 * 모듈화
 
 	IOModule: 파일 읽기/쓰기, 챕터 리스트 생성, 타이틀 번역, 단계별 쓰기/읽기
+
 	processModule: 파일 읽기, 챕터별 원본텍스트 가공하여 리스트 생성
+
 	fontModule: 챕터별 폰트 사이즈 지정
+
 	pptxModule: 파워포인트 슬라이드 생성
 
 
