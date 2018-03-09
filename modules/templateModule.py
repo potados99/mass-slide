@@ -1,17 +1,41 @@
 #-*- coding: utf-8 -*-
 
 import re
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 DRAFTS = '/home/pi/Projects/massSlide/drafts'
 RAW = DRAFTS + '/raw'
 PROCESSED = DRAFTS + '/processed'
 DONE = DRAFTS + '/done'
+TEMPLATE = '/home/pi/Projects/massSlide/templates'
 
 def read_file(file):
 	f = open(file, 'r')
-	rawText = f.read().decode("utf8")
+	rawText = f.read()
 	f.close
 	return rawText
+
+def write_file(file, chapterList):
+	f = open(file, 'w')
+	for chapter in chapterList:
+		for line in chapter:   
+ 			f.write(line + '\n')
+	f.close()
+
+def get_chapter_list(rawText, original):
+        chapterList = [x.split('\n') for x in rawText.split('#')]
+	chapterList.pop(0)
+	if original:
+		for chapter in chapterList:
+			chapter[0] = '#' + chapter[0]
+	else:
+		for chapter in chapterList:
+			while (chapter[1] == '') and (len(chapter) >= 3):
+				chapter.pop(1)
+
+	return chapterList
 
 def parse():
 	return nul
@@ -42,7 +66,7 @@ def convert_title(title, eng):
 def write_raw():
 	return nul
 
-def get_raw_dict():
+def get_raw_chapter_dict():
 	rawFileList = [
 		RAW + '/automated/cover.txt', 
 		RAW + '/automated/pardon.txt', 
@@ -72,31 +96,39 @@ def get_raw_dict():
 
 	return rawDict
 
+def write_processed(fileName, chapterList):
+	write_file(file=PROCESSED + '/' + fileName + '.txt', chapterList=chapterList)
 
-def write_processed(new):
-	return nul
+def get_processed_chapter_list(fileName):
+	rawText = read_file(file=PROCESSED + '/' + fileName + '.txt')
+	return get_chapter_list(rawText=rawText, original=True)
 
-def get_processed_list(new):
- 	return nul
+def write_done(fileName, chapterList, template):
+	rawText = read_file(file=TEMPLATE + '/' + template + '.txt')
+	templateList = get_chapter_list(rawText=rawText, original=True)
 
+	for chapterOfList in chapterList:
+		for chapterOfTemplate in templateList:
+			if chapterOfList[0] == chapterOfTemplate[0]:
+				templateList[templateList.index(chapterOfTemplate)] = chapterOfList
 
+#	for i in range(len(chapterList) - 1):
+#		for j in range(len(templateList) - 1):
+#			if chapterList[i][0] == templateList[j][0]:
+#				templateList[j] = chapterList[i]
+#				print(templateList[j])
+#				print(List[i])
 
+	for i in get_chapter_list(rawText=rawText, original=True):
+		for j in i:
+			print j	
 
-def write_done(new):
-	return nul
+	write_file(file=DONE + '/' + fileName + '.txt', chapterList=templateList)
 
-def get_done_list(filename):
-	rawText = read_file(DONE + '/' + filename + '.txt', 'r')
+def get_done_chapter_list(fileName):
+	rawText = read_file(DONE + '/' + fileName + '.txt')
 
-        chapterList = [x.split('\n') for x in rawText.split('#')]
-	chapterList.pop(0)
-
-	for chapter in chapterList:
-		while chapter[1] == '':
-			chapter.pop(1)
-
-	return chapterList
-
+	return get_chapter_list(rawText=rawText, original=False)
 
 
 '''

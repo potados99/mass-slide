@@ -1,17 +1,22 @@
 #-*- coding: utf-8 -*-
 
 import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 from modules import templateModule
 from modules import textModule
 
 
-rawDict = templateModule.get_raw_dict()
+rawDict = templateModule.get_raw_chapter_dict()
 
-processedList = []
-
+processedChapterList = []
 for title in rawDict:
-	function = getattr(textModule, "process_" + templateModule.convert_title(title=title, eng=True))
-	processedList.extend(function(rawDict[title]))
+	processFunction = getattr(textModule, "process_" + templateModule.convert_title(title=title, eng=True))
+	processedChapterList.append(processFunction(rawDict[title]))
 
-for i in processedList:
-	print i
+templateModule.write_processed(fileName='recent', chapterList=processedChapterList)
+
+processedChapterListRead = templateModule.get_processed_chapter_list(fileName='recent')
+
+templateModule.write_done(fileName='recent', chapterList=processedChapterListRead, template='lent')

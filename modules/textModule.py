@@ -1,18 +1,20 @@
 #-*- coding: utf-8 -*-
+
 import re
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 CHANTS = '/home/pi/Projects/massSlide/chants'
 
 def read_file(file):
         f = open(file, 'r')
-        rawText = f.read().decode('utf8')
+        rawText = f.read()
         f.close
         return rawText
 
 def cut_text(text, maxLength):
 	lineList = []
-
-#	print("Removing patterns")
 
 	temp1 = re.sub('\d{1,2},\d{1,2}', '', text) 
 	temp2 = re.sub('\d{1,2} ', '', temp1) 
@@ -25,7 +27,6 @@ def cut_text(text, maxLength):
 	
 		# when to add a new line, if it overs the length of total texts
 		if location + length >= len(text): #last line
-			#print("Appending last line to list, " + str(length) + "characters")
 			lineList.append(text[location:len(text)]) # make new line from current character to last character
 			break # break while statement
    
@@ -34,7 +35,6 @@ def cut_text(text, maxLength):
 
 		lineList.append(text[location:location+length])
 		lineList.append("")
-#		print("Appeding lines to list, " + str(length) + "characters")
 		location += length
 		lineCount += 1
 
@@ -79,7 +79,7 @@ def process_first_reading(rawList):
 	first_readingList = [
 		"#제1독서", 
 		"",
-		"**제2 독서**",
+		"**제1 독서**",
 		"\'" + title + "\'"
 	]
 	first_readingList.extend(["", "", ""])
@@ -162,11 +162,11 @@ def process_chants(rawList):
 	empty = ["", ""]
 
 	for line in rawList:
-		ent_match = re.match(u'입당성가=(.+)', line)
-		off_match = re.match(u'봉헌성가=(.+)', line)
-		euc1_match = re.match(u'성체성가1=(.+)', line)
-		euc2_match = re.match(u'성체성가2=(.+)', line)
-		dis_match = re.match(u'파견성가=(.+)', line)
+		ent_match = re.match('입당성가=(.+)', line)
+		off_match = re.match('봉헌성가=(.+)', line)
+		euc1_match = re.match('성체성가1=(.+)', line)
+		euc2_match = re.match('성체성가2=(.+)', line)
+		dis_match = re.match('파견성가=(.+)', line)
 
 		if ent_match:
 			 entrance.extend(read_file(CHANTS + '/' + ent_match.group(1) + '.txt').split('\n'))
@@ -232,6 +232,3 @@ def process_quiz(rawList):
 	quizList.extend(["", "", ""])
 
 	return quizList
-
-
-
