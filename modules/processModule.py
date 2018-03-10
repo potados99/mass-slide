@@ -18,8 +18,9 @@ def cut_text(text, maxLength):
 	lineList = []
 
 	temp1 = re.sub('\d{1,2},\d{1,2}', '', text) 
-	temp2 = re.sub('\d{1,2} ', '', temp1) 
-	text = re.sub('\n', ' ', temp2)
+	temp2 = re.sub('\d{1,2} ', '', temp1)
+	temp3 = re.sub('\* ', '', temp2) 
+	text = re.sub('\n', ' ', temp3)
 
 	location = 0
 	lineCount = 0
