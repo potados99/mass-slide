@@ -178,11 +178,11 @@ def process_chants(rawList):
 	empty = ["", ""]
 
 	for line in rawList:
-		ent_match = re.match('입당성가=(.+)', line)
-		off_match = re.match('봉헌성가=(.+)', line)
-		euc1_match = re.match('성체성가1=(.+)', line)
-		euc2_match = re.match('성체성가2=(.+)', line)
-		dis_match = re.match('파견성가=(.+)', line)
+		ent_match = re.match('입당성가:\s*(\d+)', line)
+		off_match = re.match('봉헌성가:\s*(\d+)', line)
+		euc1_match = re.match('성체성가1:\s*(\d+)', line)
+		euc2_match = re.match('성체성가2:\s*(\d+)', line)
+		dis_match = re.match('파견성가:\s*(\d+)', line)
 
 		if ent_match:
 			 entrance.extend(read_file(CHANTS + '/' + ent_match.group(1) + '.txt').split('\n'))
@@ -230,7 +230,7 @@ def process_prayers(rawList):
 				titleNum = titleMatch.group(1)
 				prayDict[titleNum] = []
 				prayDict[titleNum].append("")
-				lineBreak = 
+				lineBreak = 0
 
 			elif (lineBreak >= 1):
 				prayDict[titleNum].append("")
