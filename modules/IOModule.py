@@ -25,12 +25,12 @@ def write_file(file, chapterList):
 	f.close()
 
 def get_chapter_list(rawText, original):
-        chapterList = [x.split('\n') for x in rawText.split('#')]
+        chapterList = [x.split('\n') for x in rawText.split('# ')]
 	chapterList.pop(0)
 
 	if original:
 		for chapter in chapterList:
-			chapter[0] = '#' + chapter[0]
+			chapter[0] = '# ' + chapter[0]
 	else:
 		for chapter in chapterList:
 			while (chapter[1] == '') and (len(chapter) >= 3):

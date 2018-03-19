@@ -48,7 +48,7 @@ def cut_text(text, maxLength):
 
 def process_cover(rawList):
 	mainTextList = ["**" + x + "**" for x in rawList if not x == ""]
-	coverList = ["#표지", ""]
+	coverList = ["# 표지", ""]
 	coverList.extend(mainTextList)
 	coverList.extend(["", "", ""])
 
@@ -57,7 +57,7 @@ def process_cover(rawList):
 def process_pardon(rawList):
 	mainTextList = cut_text(text=" ".join(rawList), maxLength=LINE_LENGTH)
 	pardonList = [
-		"#입당송", 
+		"# 입당송", 
 		"", 
 		"**입당송**", 
 		""
@@ -70,7 +70,7 @@ def process_pardon(rawList):
 def process_collect(rawList):
 	mainTextList = cut_text(text=" ".join(rawList), maxLength=LINE_LENGTH)
 	collectList = [
-		"#본기도", 
+		"# 본기도", 
 		"",
 		"**본기도**",
 		"" 
@@ -84,7 +84,7 @@ def process_first_reading(rawList):
 	title = rawList.pop(0)
 
 	first_readingList = [
-		"#제1독서", 
+		"# 제1독서", 
 		"",
 		"**제1 독서**",
 		"\'" + title + "\'"
@@ -97,7 +97,7 @@ def process_second_reading(rawList):
 	title = rawList.pop(0)
 
 	second_readingList = [
-		"#제2독서", 
+		"# 제2독서", 
 		"",
 		"**제2 독서**",
 		"\'" + title + "\'"
@@ -109,7 +109,7 @@ def process_second_reading(rawList):
 def process_acclamation(rawList):
 	mainTextList = []
 	acclamationList = [
-		"#복음환호송",
+		"# 복음환호송",
 		"",
 		"**복음환호송**",
 		""
@@ -129,7 +129,7 @@ def process_gospel(rawList):
 	title = rawList.pop(0)
 	mainTextList = cut_text(text=" ".join(rawList), maxLength=LINE_LENGTH)
 	gospelList = [
-		"#복음",
+		"# 복음",
 		"",
 		"**복음**",
 		"\'" + title + "\'",
@@ -157,7 +157,7 @@ def process_gospel(rawList):
 def process_antiphon(rawList):
 	mainTextList = cut_text(text=" ".join(rawList), maxLength=LINE_LENGTH)
 	antiphonList = [
-		"#영성체송", 
+		"# 영성체송", 
 		"", 
 		"**영성체송**", 
 		""
@@ -170,11 +170,11 @@ def process_antiphon(rawList):
 def process_chants(rawList):
 	chantsList = []
 
-	entrance = ["#입당성가", "", "**입당성가**"]
-	offertory = ["#봉헌성가", "", "**봉헌성가**"]
-	eucharistic1 = ["#성체성가1", "", "**성체성가**"]
-	eucharistic2 = ["#성체성가2", "", "**성체성가**"]
-	dispatch = ["#파견성가", "", "**파견성가**"]
+	entrance = ["# 입당성가", "", "**입당성가**"]
+	offertory = ["# 봉헌성가", "", "**봉헌성가**"]
+	eucharistic1 = ["# 성체성가1", "", "**성체성가**"]
+	eucharistic2 = ["# 성체성가2", "", "**성체성가**"]
+	dispatch = ["# 파견성가", "", "**파견성가**"]
 	empty = ["", ""]
 
 	for line in rawList:
@@ -200,26 +200,56 @@ def process_chants(rawList):
 	return chantsList
 
 def process_prayers(rawList):
+	prayDict = {}
 	mainTextList = []
 	prayersList = [
-		"#보편지향기도",
+		"# 보편지향기도",
 		"",
 		"**보편지향기도**",
 		""
 	]
 
+	insertList = [
+		"",
+		"***",
+		"♪ 주님 저희의 기도를",
+		"들어주소서",
+		"***",
+		""
+	]
+
+	lineBreak = 0
 	for line in rawList:
-		titleMatch = re.match('\d.+', line)
+		titleMatch = re.match('(\d).+', line)
 
 		if (line == ""): # Empty line
-			continue
+			lineBreak += 1
 
-		elif titleMatch: # Title
-			mainTextList.extend(["***", line, "***"])
-			mainTextList.append("")
-		else:		 # Main Text
-			mainTextList.extend(cut_text(text=line, maxLength=LINE_LENGTH))
-			mainTextList.append("")
+		else:
+			if (lineBreak >= 1) and titleMatch:
+				titleNum = titleMatch.group(1)
+				prayDict[titleNum] = []
+				prayDict[titleNum].append("")
+				lineBreak = 
+
+			elif (lineBreak >= 1):
+				prayDict[titleNum].append("")
+                                lineBreak = 0
+
+			if titleMatch:
+				titleNum = titleMatch.group(1)
+				prayDict[titleNum] = []
+
+				prayDict[titleNum].append("***")
+				prayDict[titleNum].extend(cut_text(text=line, maxLength=LINE_LENGTH))
+				prayDict[titleNum].append("***")			
+
+			else:		 # Main Text
+				prayDict[titleNum].extend(cut_text(text=line, maxLength=LINE_LENGTH))
+
+	for title in prayDict:
+		mainTextList.extend(prayDict[title])
+		mainTextList.extend(insertList)
 
 	prayersList.extend(mainTextList)
 	prayersList.extend(["", ""])
@@ -229,7 +259,7 @@ def process_prayers(rawList):
 def process_quiz(rawList):
 	mainTextList = []
 	quizList = [
-		"#강론",
+		"# 강론",
 		"",
 		"**강론**",
 		""
@@ -242,11 +272,11 @@ def process_quiz(rawList):
 		if (line == ""): # Empty line
 			lineBreak += 1
 
-		elif (lineBreak >= 1):
-			mainTextList.append("")
-			lineBreak = 0
-
-		mainTextList.extend(cut_text(text=line, maxLength=LINE_LENGTH))
+		else:
+			if (lineBreak >= 1):
+				mainTextList.append("")
+				lineBreak = 0
+			mainTextList.extend(cut_text(text=line, maxLength=LINE_LENGTH))
 
 	quizList.extend(mainTextList)
 	quizList.extend(["", "", ""])
