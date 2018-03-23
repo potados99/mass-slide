@@ -14,17 +14,43 @@ def read_file(file):
         f.close
         return rawText
 
+def replace_text(text):
+	temp1 = re.sub('\d{1,2},\d{1,2}', '', text) 
+	temp2 = re.sub('\d{1,2} ', '', temp1)
+	temp3 = re.sub('● ', '', temp2) 
+	temp4 = re.sub('○ ', '', temp3) 
+	temp5 = re.sub('▣ ', '', temp4) 
+	temp6 = re.sub('\+ ', '', temp5) 
+	temp7 = re.sub('\* ', '', temp6) 
+	newText = re.sub('\n', ' ', temp7)
+
+	return newText
+
 def cut_text(text, maxLength):
 	lineList = []
 
-	temp1 = re.sub('\d{1,2},\d{1,2}', '', text) 
-	temp2 = re.sub('\d{1,2} ', '', temp1)
-	temp3 = re.sub('\* ', '', temp2) 
-	text = re.sub('\n', ' ', temp3)
+#	rep = {"\d{1,2},\d{1,2}": "", 
+#		"\d{1,2} ": "",
+#		"\* ": "",
+#		"● ": "",
+#		"○ ": "",
+#		"▣ ": "",
+#		"+ ": "",
+#		"\n": ""
+#	}
+#
+#	for i, j in rep.iteritems():
+#		text = text.replace(i, j)
+	
+	#rep = dict((re.escape(k), v) for k, v in rep.iteritems())
+	#pattern = re.compile("|".join(rep.keys()))
+	#text = pattern.sub(lambda m: rep[re.escape(m.group(0))], text)
+
+	text = replace_text(text)
 
 	location = 0
 	lineCount = 0
-
+	
 	while location < len(text): # until current character reaches the last character of texts
 		length = maxLength # recommanded length of each single line
 	
@@ -45,6 +71,37 @@ def cut_text(text, maxLength):
 
 	return lineList
 
+def by(name):
+	beDict = {
+		'요한': '이',
+		'마르코': '가',
+		'루카': '가',
+		'마태오': '가'
+	}
+
+	return name + beDict[name]
+
+def convert_title(title, eng):
+        titleList = [
+                ['표지', 'cover'],
+                ['입당송', 'pardon'],
+                ['본기도', 'collect'],
+                ['제1독서', 'first_reading'],
+                ['제2독서', 'second_reading'],
+                ['복음환호송', 'acclamation'],
+                ['복음', 'gospel'],
+                ['영성체송', 'antiphon'],
+                ['성가', 'chants'],
+                ['보편지향기도', 'prayers'],
+                ['강론', 'quiz']
+        ]
+
+        if eng: lang = 1
+        else: lang = 0
+
+        for line in titleList:
+                if title in line:
+                        return line[lang]
 
 def process_cover(rawList):
 	mainTextList = ["**" + x + "**" for x in rawList if not x == ""]
@@ -127,6 +184,7 @@ def process_acclamation(rawList):
 
 def process_gospel(rawList):
 	title = rawList.pop(0)
+	who, __, __ = title.partition(' ')
 	mainTextList = cut_text(text=" ".join(rawList), maxLength=LINE_LENGTH)
 	gospelList = [
 		"# 복음",
@@ -137,7 +195,7 @@ def process_gospel(rawList):
 		"†주님께서 여러분과 함께",
 		"**◎또한 사제의 영과 함께**",
 		"",
-		"†요한이 전한",
+		"†" + by(who) + " 전한",
 		"거룩한 복음입니다.",
 		"**◎주님 영광 받으소서.**",
 		""
