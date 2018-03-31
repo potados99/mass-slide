@@ -278,7 +278,7 @@ def get_chant_num_dict(rawList):
 		elif off_match: chantNumDict['off'] = off_match.group(1).replace(' ', '').split(',')
 		elif euc_match: chantNumDict['euc'] = euc_match.group(1).replace(' ', '').split(',')
 		elif dis_match: chantNumDict['dis'] = dis_match.group(1).replace(' ', '').split(',')
-		elif dis_dance_match: chantNumDict['dis_dance'] = dis_dance_match.group(1).replace(' ', '').split(',')
+		elif dis_dance_match: chantNumDict['dis_dance'] = [dis_dance_match.group(1)]
 		
 	return chantNumDict
 
@@ -311,7 +311,7 @@ def process_chants(rawList):
 			if title is not 'dis_dance':
 				chantsDict[title + str(index + 1)] = read_file(CHANTS + '/' + chant + '.txt').split('\n')
 			else:
-				chantsDict[title + str(index + 1)] = chant
+				chantsDict[title + str(index + 1)] = [chant]
 
 	for title in chantsDict:
 		chantsList.extend(chant_prefix(title))
