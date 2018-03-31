@@ -33,6 +33,7 @@ MEDIUM_FONT_LIST = [
 ]
 
 BIG_FONT_LIST = [
+	'부속가'
 ]
 
 def font_size(x):

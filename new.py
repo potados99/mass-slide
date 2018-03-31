@@ -8,21 +8,18 @@ from modules import IOModule
 from modules import processModule
 from modules import pptxModule
 
-TEMPLATE = sys.argv[1]
+#rawDict = IOModule.get_raw_chapter_dict()
 
+#rawChapterList = []
+#for title in rawDict:
+#	processFunction = getattr(processModule, "process_" + IOModule.convert_title(title=title, eng=True))
+#	rawChapterList.append(processFunction(rawDict[title]))
 
-rawDict = IOModule.get_raw_chapter_dict(TEMPLATE)
-
-rawChapterList = []
-for title in rawDict:
-	processFunction = getattr(processModule, "process_" + IOModule.convert_title(title=title, eng=True))
-	rawChapterList.append(processFunction(rawDict[title]))
-
-IOModule.write_processed(fileName='recent', chapterList=rawChapterList)
+#IOModule.write_processed(fileName='recent', chapterList=rawChapterList)
 
 processedChapterList = IOModule.get_processed_chapter_list(fileName='recent')
 
-IOModule.write_done(fileName='recent', chapterList=processedChapterList, template=TEMPLATE)
+IOModule.write_done(fileName='recent', chapterList=processedChapterList, template='lent')
 
 doneChapterList = IOModule.get_done_chapter_list(fileName='recent')
 

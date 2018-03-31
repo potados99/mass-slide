@@ -17,12 +17,12 @@ def read_file(file):
 def replace_text(text):
 	temp1 = re.sub('\d{1,2},\d{1,2}', '', text) 
 	temp2 = re.sub('\d{1,2} ', '', temp1)
-	temp3 = re.sub('● ', '', temp2) 
-	temp4 = re.sub('○ ', '', temp3) 
-	temp5 = re.sub('▣ ', '', temp4) 
-	temp6 = re.sub('\+ ', '', temp5) 
-	temp7 = re.sub('\* ', '', temp6) 
-	newText = re.sub('\n', ' ', temp7)
+#	temp3 = re.sub('● ', '', temp2) 
+#	temp4 = re.sub('○ ', '', temp3) 
+#	temp5 = re.sub('▣ ', '', temp4) 
+#	temp6 = re.sub('\+ ', '', temp5) 
+	temp3 = re.sub('\* ', '', temp2) 
+	newText = re.sub('\n', ' ', temp3)
 
 	return newText
 
@@ -181,6 +181,23 @@ def process_acclamation(rawList):
 	acclamationList.extend(["", ""])
 
 	return acclamationList
+
+def process_sequence(rawList):
+	mainTextList = []
+	sequenceList = [
+		"# 부속가",
+		"",
+		"**부속가**",
+		""
+	]
+
+	for line in rawList:
+		mainTextList.append(line)
+
+	sequenceList.extend(mainTextList)
+	sequenceList.extend(["", ""])
+
+	return sequenceList
 
 def process_gospel(rawList):
 	title = rawList.pop(0)

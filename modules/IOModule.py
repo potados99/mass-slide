@@ -49,6 +49,7 @@ def convert_title(title, eng):
 		['제1독서', 'first_reading'],
 		['제2독서', 'second_reading'],
 		['복음환호송', 'acclamation'],
+		['부속가', 'sequence'],
 		['복음', 'gospel'],
 		['영성체송', 'antiphon'],
 		['성가', 'chants'],
@@ -67,20 +68,18 @@ def convert_title(title, eng):
 def write_raw():
 	return nul
 
-def get_raw_chapter_dict():
+def get_raw_chapter_dict(template):
 	rawFileList = [
-		RAW + '/automated/cover.txt', 
-		RAW + '/automated/pardon.txt', 
-		RAW + '/automated/collect.txt', 
-		RAW + '/automated/first_reading.txt', 
-		RAW + '/automated/second_reading.txt', 
-		RAW + '/automated/acclamation.txt', 
-		RAW + '/automated/gospel.txt', 
-		RAW + '/automated/antiphon.txt', 
 		RAW + '/chants.txt',
 		RAW + '/prayers.txt',
 		RAW + '/quiz.txt'
 	]
+	
+	filenameSet = read_file(TEMPLATE + '/' + template + '_updates.txt').split('\n')
+
+	for filename in filenameSet:
+		if not filename is '':
+			rawFileList.append(RAW + '/automated/' + filename)
 
 	rawDict = {}
 
