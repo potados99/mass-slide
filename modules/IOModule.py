@@ -103,18 +103,9 @@ def get_processed_chapter_list(fileName):
 	rawText = read_file(file=PROCESSED + '/' + fileName + '.txt')
 	return get_chapter_list(rawText=rawText, original=True)
 
-def write_done(fileName, chapterList, template):
-	rawText = read_file(file=TEMPLATE + '/' + template + '.txt')
-	templateList = get_chapter_list(rawText=rawText, original=True)
-
-	for chapterOfList in chapterList:
-		for chapterOfTemplate in templateList:
-			if chapterOfList[0] == chapterOfTemplate[0]:
-				templateList[templateList.index(chapterOfTemplate)] = chapterOfList
-
-	write_file(file=DONE + '/' + fileName + '.txt', chapterList=templateList)
+def write_done(fileName, chapterList):
+	write_file(file=DONE + '/' + fileName + '.txt', chapterList=chapterList)
 
 def get_done_chapter_list(fileName):
 	rawText = read_file(DONE + '/' + fileName + '.txt')
-
 	return get_chapter_list(rawText=rawText, original=False)

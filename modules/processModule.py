@@ -3,10 +3,31 @@
 import re
 import sys
 reload(sys)
+import IOModule
 sys.setdefaultencoding('utf-8')
 
 CHANTS = '/home/pi/Projects/massSlide/chants'
 LINE_LENGTH = 35
+
+def raw_to_processed(rawDict):
+	processedChapterList = []
+
+	for title in rawDict:
+        	processFunction = getattr(sys.modules[__name__], "process_" + IOModule.convert_title(title=title, eng=True))
+        	processedChapterList.append(processFunction(rawDict[title]))
+
+	return processedChapterList
+
+def processed_to_done(chapterList, template):
+        rawText = read_file(file=IOModule.TEMPLATE + '/' + template + '.txt')
+        templateList = IOModule.get_chapter_list(rawText=rawText, original=True)
+
+        for chapterOfList in chapterList:
+                for chapterOfTemplate in templateList:
+                        if chapterOfList[0] == chapterOfTemplate[0]:
+                                templateList[templateList.index(chapterOfTemplate)] = chapterOfList
+
+	return templateList
 
 def read_file(file):
         f = open(file, 'r')

@@ -13,21 +13,22 @@ TEMPLATE = sys.argv[1]
 
 rawDict = IOModule.get_raw_chapter_dict(TEMPLATE)
 
-rawChapterList = []
-for title in rawDict:
-	processFunction = getattr(processModule, "process_" + IOModule.convert_title(title=title, eng=True))
-	rawChapterList.append(processFunction(rawDict[title]))
+processedChapterList = processModule.raw_to_processed(rawDict)
 
-IOModule.write_processed(fileName='recent', chapterList=rawChapterList)
+IOModule.write_processed(fileName='recent', chapterList=processedChapterList)
 
-processedChapterList = IOModule.get_processed_chapter_list(fileName='recent')
 
-IOModule.write_done(fileName='recent', chapterList=processedChapterList, template=TEMPLATE)
+readProcessedChapterList = IOModule.get_processed_chapter_list(fileName='recent')
 
-doneChapterList = IOModule.get_done_chapter_list(fileName='recent')
+doneChapterList = processModule.processed_to_done(readProcessedChapterList, TEMPLATE)
+
+IOModule.write_done(fileName='recent', chapterList=doneChapterList)
+
+
+readDoneChapterList = IOModule.get_done_chapter_list(fileName='recent')
 
 myPrs = pptxModule.new_presentation()
 
-pptxModule.write_presentation(Presentation=myPrs, List=doneChapterList)
+pptxModule.write_presentation(Presentation=myPrs, List=readDoneChapterList)
 
 pptxModule.save_presentation(prs=myPrs, path='/home/pi/WebDAV/new.pptx')
