@@ -263,35 +263,60 @@ def process_antiphon(rawList):
 
 	return antiphonList
 
-def process_chants(rawList):
-	chantsList = []
-
-	entrance = ["# 입당성가", "", "**입당성가**"]
-	offertory = ["# 봉헌성가", "", "**봉헌성가**"]
-	eucharistic1 = ["# 성체성가1", "", "**성체성가**"]
-	eucharistic2 = ["# 성체성가2", "", "**성체성가**"]
-	dispatch = ["# 파견성가", "", "**파견성가**"]
-	empty = ["", ""]
+def get_chant_num_dict(rawList):
+	chantNumDict = {}
 
 	for line in rawList:
-		ent_match = re.match('입당성가:\s*(\d+)', line)
-		off_match = re.match('봉헌성가:\s*(\d+)', line)
-		euc1_match = re.match('성체성가1:\s*(\d+)', line)
-		euc2_match = re.match('성체성가2:\s*(\d+)', line)
-		dis_match = re.match('파견성가:\s*(\d+)', line)
+		ent_match = re.match('입당성가:\s*(\d+.+)', line)
+		off_match = re.match('봉헌성가:\s*(\d+.+)', line)
+		euc_match = re.match('성체성가:\s*(\d+.+)', line)
+		dis_match = re.match('파견성가:\s*(\d+.+)', line)
+		dis_dance_match = re.match('파견성가:\s*(.+)', line)
 
-		if ent_match:
-			 entrance.extend(read_file(CHANTS + '/' + ent_match.group(1) + '.txt').split('\n'))
-		elif off_match:
-			offertory.extend(read_file(CHANTS + '/' + off_match.group(1) + '.txt').split('\n'))
-		elif euc1_match:
-			 eucharistic1.extend(read_file(CHANTS + '/' + euc1_match.group(1) + '.txt').split('\n'))
-		elif euc2_match:
-			 eucharistic2.extend(read_file(CHANTS + '/' + euc2_match.group(1) + '.txt').split('\n'))
-		elif dis_match:
-			 dispatch.extend(read_file(CHANTS + '/' + dis_match.group(1) + '.txt').split('\n'))
+		# read never...
+		if ent_match: chantNumDict['ent'] = ent_match.group(1).replace(' ', '').split(',')
+		elif off_match: chantNumDict['off'] = off_match.group(1).replace(' ', '').split(',')
+		elif euc_match: chantNumDict['euc'] = euc_match.group(1).replace(' ', '').split(',')
+		elif dis_match: chantNumDict['dis'] = dis_match.group(1).replace(' ', '').split(',')
+		elif dis_dance_match: chantNumDict['dis_dance'] = dis_dance_match.group(1).replace(' ', '').split(',')
+		
+	return chantNumDict
 
-	chantsList = entrance + empty + offertory + empty + eucharistic1 + empty + eucharistic2 + empty + dispatch + empty
+def chant_prefix(chantAndNum):
+	prefixList = []
+	match = re.match(r"([a-zA-Z]+_*[a-zA-Z]*)([0-9]+)", chantAndNum)
+
+	if match:
+		chant = match.group(1)
+		num = match.group(2)
+
+		if chant == 'ent': prefixList = ["# 입당성가" + str(num), "", "**입당성가**"]
+		elif chant == 'off': prefixList = ["# 봉헌성가" + str(num), "", "**봉헌성가**"]
+		elif chant == 'euc': prefixList = ["# 성체성가" + str(num), "", "**성체성가**"]
+		elif chant == 'dis': prefixList = ["# 파견성가" + str(num), "", "**파견성가**"]
+		elif chant == 'dis_dance': prefixList = ["# 파견성가" + str(num), "", "**파견성가**"]
+
+	return prefixList
+
+def process_chants(rawList):
+	chantsList = []
+	empty = ["", ""]
+
+	chantsDict = {}
+
+	chantNumDict = get_chant_num_dict(rawList)
+
+	for title in chantNumDict:
+		for index, chant in enumerate(chantNumDict[title]):
+			if title is not 'dis_dance':
+				chantsDict[title + str(index + 1)] = read_file(CHANTS + '/' + chant + '.txt').split('\n')
+			else:
+				chantsDict[title + str(index + 1)] = chant
+
+	for title in chantsDict:
+		chantsList.extend(chant_prefix(title))
+		chantsList.extend(chantsDict[title])
+		chantsList.extend(empty)
 
 	return chantsList
 
