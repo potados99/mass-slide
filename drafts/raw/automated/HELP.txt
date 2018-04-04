@@ -1,8 +1,8 @@
 cover.txt : 표지
 pardon.txt : 입당송
 collect.txt : 본기도
-first_reading : 제1 독서
-second_reading : 제2 독서
+first_reading.txt : 제1 독서
+second_reading.txt : 제2 독서
 acclamation.txt : 복음환호송
 gospel.txt : 복음
 antiphon.txt : 영성체송
