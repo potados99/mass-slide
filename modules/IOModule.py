@@ -5,11 +5,11 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-DRAFTS = '/home/pi/Projects/massSlide/drafts'
+DRAFTS = '/home/pi/Projects/mass-slide/drafts'
 RAW = DRAFTS + '/raw'
 PROCESSED = DRAFTS + '/processed'
 DONE = DRAFTS + '/done'
-TEMPLATE = '/home/pi/Projects/massSlide/templates'
+TEMPLATE = '/home/pi/Projects/mass-slide/templates'
 
 def read_file(file):
 	f = open(file, 'r')

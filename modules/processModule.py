@@ -6,7 +6,7 @@ reload(sys)
 import IOModule
 sys.setdefaultencoding('utf-8')
 
-CHANTS = '/home/pi/Projects/massSlide/chants'
+CHANTS = '/home/pi/Projects/mass-slide/chants'
 LINE_LENGTH = 35
 
 def raw_to_processed(rawDict):

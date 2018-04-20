@@ -3,6 +3,5 @@ pardon.txt
 collect.txt
 first_reading.txt
 second_reading.txt
-sequence.txt
 gospel.txt
 antiphon.txt
