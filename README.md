@@ -40,7 +40,7 @@ pip install python-pptx
 
 4. `drafts/raw/automated`에 위치한 파일 중, 아까 본 그 목록에 있는 파일을 최신으로 업데이트합니다.
 
-	> 예시: templates 폴더의 lent_updates.txt의 내용이
+	> 예시: templates 폴더의 lent_updates.txt의 내용이  
 	cover.txt  
 	pardon.txt  
 	collect.txt  
@@ -52,7 +52,9 @@ pip install python-pptx
 	위와 같을 때,  
 	drafts/raw/automated 폴더에서 저 파일들을 업데이트합니다.
 
-5. 그리고 다음 명령어를 실행합니다.
+5. `drafts/raw`에 위치한 3개의 파일도 업데이트합니다.
+
+6. 그리고 다음 명령어를 실행합니다.
 
 	```sh
 	python app.py [선택한 템플릿]
