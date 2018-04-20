@@ -23,7 +23,7 @@ pip install python-pptx
 사용법
 =====
 
-1. 다 영어입니다. 다음 목록을 숙지하세요.
+1. 먼저, 다 영어입니다. 다음 목록을 숙지하세요.
 
 	> cover.txt : 표지  
 	pardon.txt : 입당송  
@@ -34,7 +34,7 @@ pip install python-pptx
 	gospel.txt : 복음  
 	antiphon.txt : 영성체송
 
-2. 먼저 `templates`에서 템플릿을 선택합니다.
+2. `templates`에서 템플릿을 선택합니다.
 
 3. `templates/[선택한 템플릿]_updates.txt`을 열어 목록을 봐 둡니다.
 
