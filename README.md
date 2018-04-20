@@ -23,7 +23,7 @@ pip install python-pptx
 사용법
 =====
 
-0. 다 영어입니다. 다음 목록을 숙지하세요.
+1. 다 영어입니다. 다음 목록을 숙지하세요.
 
 	> cover.txt : 표지  
 	pardon.txt : 입당송  
