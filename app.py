@@ -1,13 +1,19 @@
 #-*- coding: utf-8 -*-
 
+import pkg_resources
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+from datetime import datetime
 from modules import IOModule
 from modules import processModule
 from modules import pptxModule
 
+PR = pkg_resources.resource_filename('__main__','')
+now = datetime.now()
+CREATED = PR + '/created'
+FILENAME = ( '%s%s%s.pptx' % ( now.year, now.month, now.day ) )
 TEMPLATE = sys.argv[1]
 
 
@@ -31,4 +37,4 @@ myPrs = pptxModule.new_presentation()
 
 pptxModule.write_presentation(Presentation=myPrs, List=readDoneChapterList)
 
-pptxModule.save_presentation(prs=myPrs, path='/home/pi/WebDAV/new.pptx')
+pptxModule.save_presentation(prs=myPrs, path=CREATED + '/' + FILENAME)

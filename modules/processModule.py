@@ -1,12 +1,14 @@
 #-*- coding: utf-8 -*-
 
 import re
+import pkg_resources
 import sys
 reload(sys)
 import IOModule
 sys.setdefaultencoding('utf-8')
 
-CHANTS = '/home/pi/Projects/mass-slide/chants'
+PR = pkg_resources.resource_filename('__main__','')
+CHANTS = PR + '/chants'
 LINE_LENGTH = 35
 
 def raw_to_processed(rawDict):
@@ -36,13 +38,13 @@ def read_file(file):
         return rawText
 
 def replace_text(text):
-	temp1 = re.sub('\d{1,2},\d{1,2}', '', text) 
+	temp1 = re.sub('\d{1,2},\d{1,2}', '', text)
 	temp2 = re.sub('\d{1,2} ', '', temp1)
-#	temp3 = re.sub('● ', '', temp2) 
-#	temp4 = re.sub('○ ', '', temp3) 
-#	temp5 = re.sub('▣ ', '', temp4) 
-#	temp6 = re.sub('\+ ', '', temp5) 
-	temp3 = re.sub('\* ', '', temp2) 
+#	temp3 = re.sub('● ', '', temp2)
+#	temp4 = re.sub('○ ', '', temp3)
+#	temp5 = re.sub('▣ ', '', temp4)
+#	temp6 = re.sub('\+ ', '', temp5)
+	temp3 = re.sub('\* ', '', temp2)
 	newText = re.sub('\n', ' ', temp3)
 
 	return newText
@@ -50,7 +52,7 @@ def replace_text(text):
 def cut_text(text, maxLength):
 	lineList = []
 
-#	rep = {"\d{1,2},\d{1,2}": "", 
+#	rep = {"\d{1,2},\d{1,2}": "",
 #		"\d{1,2} ": "",
 #		"\* ": "",
 #		"● ": "",
@@ -62,7 +64,7 @@ def cut_text(text, maxLength):
 #
 #	for i, j in rep.iteritems():
 #		text = text.replace(i, j)
-	
+
 	#rep = dict((re.escape(k), v) for k, v in rep.iteritems())
 	#pattern = re.compile("|".join(rep.keys()))
 	#text = pattern.sub(lambda m: rep[re.escape(m.group(0))], text)
@@ -71,15 +73,15 @@ def cut_text(text, maxLength):
 
 	location = 0
 	lineCount = 0
-	
+
 	while location < len(text): # until current character reaches the last character of texts
 		length = maxLength # recommanded length of each single line
-	
+
 		# when to add a new line, if it overs the length of total texts
 		if location + length >= len(text): #last line
 			lineList.append(text[location:len(text)]) # make new line from current character to last character
 			break # break while statement
-   
+
 		while text[location + length - 1] != " ":
 			length -= 1
 
@@ -135,9 +137,9 @@ def process_cover(rawList):
 def process_pardon(rawList):
 	mainTextList = cut_text(text=" ".join(rawList), maxLength=LINE_LENGTH)
 	pardonList = [
-		"# 입당송", 
-		"", 
-		"**입당송**", 
+		"# 입당송",
+		"",
+		"**입당송**",
 		""
 	]
 	pardonList.extend(mainTextList)
@@ -148,10 +150,10 @@ def process_pardon(rawList):
 def process_collect(rawList):
 	mainTextList = cut_text(text=" ".join(rawList), maxLength=LINE_LENGTH)
 	collectList = [
-		"# 본기도", 
+		"# 본기도",
 		"",
 		"**본기도**",
-		"" 
+		""
 	]
 	collectList.extend(mainTextList)
 	collectList.extend(["", "", ""])
@@ -162,7 +164,7 @@ def process_first_reading(rawList):
 	title = rawList.pop(0)
 
 	first_readingList = [
-		"# 제1독서", 
+		"# 제1독서",
 		"",
 		"**제1 독서**",
 		"\'" + title + "\'"
@@ -175,7 +177,7 @@ def process_second_reading(rawList):
 	title = rawList.pop(0)
 
 	second_readingList = [
-		"# 제2독서", 
+		"# 제2독서",
 		"",
 		"**제2 독서**",
 		"\'" + title + "\'"
@@ -253,9 +255,9 @@ def process_gospel(rawList):
 def process_antiphon(rawList):
 	mainTextList = cut_text(text=" ".join(rawList), maxLength=LINE_LENGTH)
 	antiphonList = [
-		"# 영성체송", 
-		"", 
-		"**영성체송**", 
+		"# 영성체송",
+		"",
+		"**영성체송**",
 		""
 	]
 	antiphonList.extend(mainTextList)
@@ -279,7 +281,7 @@ def get_chant_num_dict(rawList):
 		elif euc_match: chantNumDict['euc'] = euc_match.group(1).replace(' ', '').split(',')
 		elif dis_match: chantNumDict['dis'] = dis_match.group(1).replace(' ', '').split(',')
 		elif dis_dance_match: chantNumDict['dis_dance'] = [dis_dance_match.group(1)]
-		
+
 	return chantNumDict
 
 def chant_prefix(chantAndNum):
@@ -363,7 +365,7 @@ def process_prayers(rawList):
 
 				prayDict[titleNum].append("***")
 				prayDict[titleNum].extend(cut_text(text=line, maxLength=LINE_LENGTH))
-				prayDict[titleNum].append("***")			
+				prayDict[titleNum].append("***")
 
 			else:		 # Main Text
 				prayDict[titleNum].extend(cut_text(text=line, maxLength=LINE_LENGTH))
@@ -389,7 +391,7 @@ def process_quiz(rawList):
 	lineBreak = 0
 	for line in rawList:
 		titleMatch = re.match('[A-Z].+', line)
-	
+
 		if (line == ""): # Empty line
 			lineBreak += 1
 
