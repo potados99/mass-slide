@@ -1,15 +1,17 @@
 #-*- coding: utf-8 -*-
 
 import re
+import pkg_resources
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-DRAFTS = '/home/pi/Projects/massSlide/drafts'
+PR = pkg_resources.resource_filename('__main__','')
+TEMPLATE = PR + '/templates'
+DRAFTS = PR + '/drafts'
 RAW = DRAFTS + '/raw'
 PROCESSED = DRAFTS + '/processed'
 DONE = DRAFTS + '/done'
-TEMPLATE = '/home/pi/Projects/massSlide/templates'
 
 def read_file(file):
 	f = open(file, 'r')
@@ -20,7 +22,7 @@ def read_file(file):
 def write_file(file, chapterList):
 	f = open(file, 'w')
 	for chapter in chapterList:
-		for line in chapter:   
+		for line in chapter:
  			f.write(line + '\n')
 	f.close()
 
@@ -35,7 +37,7 @@ def get_chapter_list(rawText, original):
 		for chapter in chapterList:
 			while (chapter[1] == '') and (len(chapter) >= 3):
 				chapter.pop(1)
-	
+
 	for chapter in chapterList:
 		chapter.pop(-1)
 
@@ -74,7 +76,7 @@ def get_raw_chapter_dict(template):
 		RAW + '/prayers.txt',
 		RAW + '/quiz.txt'
 	]
-	
+
 	filenameSet = read_file(TEMPLATE + '/' + template + '_updates.txt').split('\n')
 
 	for filename in filenameSet:
