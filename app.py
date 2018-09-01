@@ -10,7 +10,8 @@ from modules import IOModule
 from modules import processModule
 from modules import pptxModule
 
-PR = pkg_resources.resource_filename('__main__','')
+#PR = pkg_resources.resource_filename('__main__','')
+PR = '/Users/potados/Documents/GitHub/mass-slide/'
 now = datetime.now()
 CREATED = PR + '/created'
 FILENAME = ( '%s%s%s.pptx' % ( now.year, now.month, now.day ) )

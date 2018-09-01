@@ -7,7 +7,8 @@ reload(sys)
 import IOModule
 sys.setdefaultencoding('utf-8')
 
-PR = pkg_resources.resource_filename('__main__','')
+#PR = pkg_resources.resource_filename('__main__','')
+PR = '/Users/potados/Documents/GitHub/mass-slide/'
 CHANTS = PR + '/chants'
 LINE_LENGTH = 35
 
